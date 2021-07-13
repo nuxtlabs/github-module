@@ -1,0 +1,70 @@
+{
+  "name": "@docus/core",
+  "version": "1.0.0",
+  "description": "The Docus core.",
+  "keywords": [
+    "nuxt",
+    "module",
+    "nuxt-module"
+  ],
+  "repository": "https://github.com/docusgen/core",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "scripts": {
+    "build": "siroc build",
+    "dev": "nuxt dev example",
+    "lint": "eslint --ext .js,.ts,.vue .",
+    "test": "yarn lint && jest",
+    "clean:example": "rm -rf example/.nuxt example/node_modules",
+    "clean:app": "rm -rf src/app/node_modules src/app/.nuxt",
+    "clean:dist": "rm -rf dist node_modules",
+    "clean": "yarn clean:example && yarn clean:app && yarn clean:dist"
+  },
+  "resolutions": {
+    "@nuxt/components": "npm:@pi0/components",
+    "vue-server-renderer": "2.6.14",
+    "vue-template-compiler": "2.6.14"
+  },
+  "dependencies": {
+    "defu": "^5.0.0",
+    "ohmyfetch": "^0.1.8"
+  },
+  "devDependencies": {
+    "@babel/plugin-transform-runtime": "latest",
+    "@babel/preset-env": "latest",
+    "@babel/preset-typescript": "latest",
+    "@docus/app": "1.0.8",
+    "@nuxt/test-utils": "latest",
+    "@nuxt/types": "^2.15.7",
+    "@nuxt/typescript-runtime": "latest",
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "@siroc/jest-preset": "latest",
+    "@types/fs-extra": "^9.0.12",
+    "@types/jest": "latest",
+    "babel-eslint": "latest",
+    "babel-jest": "latest",
+    "eslint": "^7.30.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-nuxt": "^2.0.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "jest": "latest",
+    "playwright": "^1.12.3",
+    "prettier": "^2.3.2",
+    "siroc": "^0.9.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

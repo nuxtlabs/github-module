@@ -1,1 +1,1 @@
-# github-module
+# core
