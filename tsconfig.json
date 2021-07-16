@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "strict": true,
-    "target": "es2018",
-    "module": "esnext",
+    "target": "esnext",
+    "module": "commonjs",
     "lib": ["esnext", "dom"],
     "esModuleInterop": true,
     "moduleResolution": "node",
@@ -10,8 +10,9 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "types": ["node", "jest", "@nuxt/types", "nuxt-i18n"]
+    "types": ["node", "jest", "@nuxt/types", "nuxt-i18n"],
+    "allowJs": true
   },
-  "include": ["src/**/*", "src/index.ts", "example", "playground", "scripts", "templates/plugin.js"],
+  "include": ["src/**/*", "src/module.ts", "example", "playground", "scripts"],
   "exclude": ["node_modules", "dist"]
 }

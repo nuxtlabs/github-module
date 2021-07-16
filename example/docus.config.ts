@@ -1,3 +1,6 @@
 export default {
-  title: 'Example'
+  title: 'Example',
+  github: {
+    releases: 'nuxt/nuxt.js'
+  }
 }

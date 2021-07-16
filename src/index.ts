@@ -1,6 +1,6 @@
 import { Module } from '@nuxt/types'
 import defu from 'defu'
-import { useStorage, ParserOptions } from '@docus/core'
+import { useStorage, DocusContext } from '@docus/core'
 import { fetch } from './github'
 import githubDefaults from './settings'
 
@@ -10,14 +10,10 @@ export default <Module>function docusGithubModule() {
   const settings = this.$docus.settings
 
   settings.github = defu(settings.github, githubDefaults)
-  const repository = typeof settings.github.releases === 'string' ? settings.github.releases : settings.github.repo
 
-  hook('docus:parserOptions', (options: Partial<ParserOptions>) => {
-    if (!options.markdown.remarkPlugins) {
-      options.markdown.remarkPlugins = []
-    }
-
-    options.markdown.remarkPlugins.push([
+  hook('docus:context', (context: DocusContext) => {
+    const repository = typeof settings.github.releases === 'string' ? settings.github.releases : settings.github.repo
+    context.transformers.markdown.remarkPlugins.push([
       'remark-github',
       {
         repository
@@ -25,12 +21,12 @@ export default <Module>function docusGithubModule() {
     ])
   })
 
-  hook('docus:storage:ready', () => {
+  hook('modules:done', () => {
     // Fetch releases
     fetch(settings.github).then(releases => {
-      const { storage } = useStorage()
+      const storage = useStorage()
 
-      storage.setItem('data:github-releases.json', {
+      storage.setItem('data:github-releases', {
         releases
       })
     })
