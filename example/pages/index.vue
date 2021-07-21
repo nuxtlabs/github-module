@@ -11,7 +11,9 @@
 <script lang="ts">
 export default {
   async asyncData({ $docus }) {
-    const { releases } = await $docus.data('github-releases')
+    const {
+      body: { releases }
+    } = await $docus.data('github-releases')
 
     return {
       releases

@@ -1,6 +1,6 @@
 import { Module } from '@nuxt/types'
 import defu from 'defu'
-import { useStorage, DocusContext } from '@docus/core'
+import { useStorage, DocusContext } from '@docus/core/node'
 import { fetch } from './github'
 import githubDefaults from './settings'
 
@@ -26,7 +26,7 @@ export default <Module>function docusGithubModule() {
     fetch(settings.github).then(releases => {
       const storage = useStorage()
 
-      storage.setItem('data:github-releases', {
+      storage?.setItem('data:github-releases', {
         releases
       })
     })

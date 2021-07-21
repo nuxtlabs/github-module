@@ -1,5 +1,5 @@
 import { $fetch, FetchOptions } from 'ohmyfetch/node'
-import { getTransformer } from '@docus/core'
+import { getTransformer } from '@docus/core/node'
 import { normalizeReleaseName } from './utils'
 import { GithubRawRelease, GithubRelease, GithubReleaseOptions } from './types'
 let cachedReleases: GithubRelease[] = []
@@ -11,7 +11,7 @@ export function get(): GithubRelease[] {
 const getMajorVersion = (r: GithubRelease): number => (r.name ? Number(r.name.substring(1, 2)) : 0)
 
 export async function fetch(settings: GithubReleaseOptions) {
-  const key = 'github-releases.md'
+  const key = 'content:github-releases.md'
   let releases: GithubRelease[] = []
 
   const transform = getTransformer(key)
@@ -27,7 +27,7 @@ export async function fetch(settings: GithubReleaseOptions) {
       girhubReleases.map(async r => {
         return {
           ...r,
-          ...(await transform(key, r.body)).body
+          ...(await transform(key, r.body))
         }
       })
     )
