@@ -2,33 +2,28 @@
 
 > GitHub integration for Docus.
 
-
 ## Quick Setup
 
 1. Add `@docus/github` dependency to your project:
 
 ```bash
-#using yarn
+# Using Yarn
 yarn add --dev @docus/github
-# using npm
+# Using NPM
 npm install --save-dev @docus/github
 ```
 
-
 2. Add `@docus/github` to the `buildModules` section of your `nuxt.config.js`
 
-```
+```js
 {
-  buildModules: [
-    '@docus/github'
-  ]
+  buildModules: ['@docus/github']
 }
 ```
 
-
 ## Usage
 
-### Get github releases using `$docus.data` util
+### Get GitHub releases using `$docus.data` util
 
 ```js
 $docus.data('github-releases')
