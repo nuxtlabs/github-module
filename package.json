@@ -49,21 +49,21 @@
     "unbuild": "^0.3.2"
   },
   "devDependencies": {
-    "@docus/app": "^1.0.21",
+    "@docus/app": "^1.0.22",
     "@nuxt/test-utils": "latest",
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/jest": "^26.0.24",
     "babel-eslint": "latest",
-    "eslint": "^7.30.0",
+    "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.6",
-    "playwright": "^1.12.3",
+    "playwright": "^1.13.0",
     "prettier": "^2.3.2",
-    "ts-jest": "^27.0.3"
+    "ts-jest": "^27.0.4"
   },
   "publishConfig": {
     "access": "public"
