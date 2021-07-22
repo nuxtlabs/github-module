@@ -1,6 +1,6 @@
 {
   "name": "@docus/github",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitHub integration for Docus.",
   "keywords": [
     "nuxt",
@@ -61,6 +61,9 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.6",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.14.7",
+    "@babel/plugin-transform-runtime": "latest",
     "playwright": "^1.13.0",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.4"
