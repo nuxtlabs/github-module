@@ -1,6 +1,6 @@
 import { Module } from '@nuxt/types'
 import defu from 'defu'
-import { useStorage, DocusContext } from '@docus/core/node'
+import { useStorage, DocusContext } from '@docus/core'
 import { fetch } from './github'
 import githubDefaults from './settings'
 

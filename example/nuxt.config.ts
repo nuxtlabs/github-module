@@ -14,5 +14,5 @@ export default withDocus(themePath, {
       }
     }
   },
-  buildModules: ['../src/module']
+  buildModules: ['../src']
 })

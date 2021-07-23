@@ -1,4 +1,4 @@
-import { DocusRootNode } from '@docus/core/node'
+import { DocusRootNode } from '@docus/core'
 
 export interface GithubRelease {
   name: string

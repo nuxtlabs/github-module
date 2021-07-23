@@ -14,10 +14,6 @@
     ".": {
       "require": "./dist/index.js",
       "import": "./dist/index.mjs"
-    },
-    "./module":{
-      "require": "./dist/module.js",
-      "import": "./dist/module.mjs"
     }
   },
   "main": "dist/index.js",
@@ -49,7 +45,10 @@
     "unbuild": "^0.3.2"
   },
   "devDependencies": {
-    "@docus/app": "^1.0.22",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.14.7",
+    "@babel/plugin-transform-runtime": "latest",
+    "@docus/app": "^1.0.25",
     "@nuxt/test-utils": "latest",
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-runtime": "latest",
@@ -61,9 +60,6 @@
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.6",
-    "@babel/plugin-proposal-class-properties": "^7.14.5",
-    "@babel/plugin-proposal-object-rest-spread": "^7.14.7",
-    "@babel/plugin-transform-runtime": "latest",
     "playwright": "^1.13.0",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.4"

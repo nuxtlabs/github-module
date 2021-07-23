@@ -1,5 +1,5 @@
 export default {
-  entries: ['./src/module'],
+  entries: ['./src/index'],
   declaration: true,
   externals: ['@docus/core', '@docus/core/node', '@nuxt/types']
 }

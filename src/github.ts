@@ -1,5 +1,5 @@
 import { $fetch, FetchOptions } from 'ohmyfetch/node'
-import { getTransformer } from '@docus/core/node'
+import { getTransformer } from '@docus/core'
 import { normalizeReleaseName } from './utils'
 import { GithubRawRelease, GithubRelease, GithubReleaseOptions } from './types'
 let cachedReleases: GithubRelease[] = []
