@@ -40,27 +40,27 @@
   "dependencies": {
     "@nuxt/kit": "^0.6.4",
     "defu": "^5.0.0",
-    "ohmyfetch": "^0.1.8",
+    "ohmyfetch": "^0.2.0",
     "remark-github": "^10.1.0",
-    "unbuild": "^0.3.2"
+    "unbuild": "^0.4.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.14.7",
     "@babel/plugin-transform-runtime": "latest",
-    "@docus/app": "^1.0.25",
+    "@docus/app": "^1.0.37",
     "@nuxt/test-utils": "latest",
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/jest": "^26.0.24",
     "babel-eslint": "latest",
-    "eslint": "^7.31.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.6",
-    "playwright": "^1.13.0",
+    "playwright": "^1.13.1",
     "prettier": "^2.3.2",
     "ts-jest": "^27.0.4"
   },
