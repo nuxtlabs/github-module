@@ -53,7 +53,7 @@
     "@nuxt/types": "^2.15.7",
     "@nuxt/typescript-runtime": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27.0.0",
     "babel-eslint": "latest",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
