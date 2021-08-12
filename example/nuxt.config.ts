@@ -6,13 +6,5 @@ const themePath = resolve(__dirname, './theme/index.ts')
 
 export default withDocus(themePath, {
   rootDir: __dirname,
-  // @ts-ignore
-  vite: {
-    server: {
-      fs: {
-        strict: false
-      }
-    }
-  },
   buildModules: ['../src']
 })
