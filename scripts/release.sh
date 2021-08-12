@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Restore all git changes
-git restore -s@ -SW  -- example src templates
+git restore -s@ -SW  -- example src test
 
 # Resolve yarn
 yarn
@@ -15,5 +15,5 @@ if [[ ! -z ${NODE_AUTH_TOKEN} ]] ; then
 fi
 
 # Release package
-echo "Publishing @docus/core"
+echo "Publishing @docus/github-module"
 npm publish -q --access public

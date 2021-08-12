@@ -15,7 +15,7 @@ npm install --save-dev @docus/github
 
 2. Add `@docus/github` to the `buildModules` section of your `nuxt.config.js`
 
-```js
+```ts
 {
   buildModules: ['@docus/github']
 }

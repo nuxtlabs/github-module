@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Restore all git changes
-git restore -s@ -SW  -- example src templates
+git restore -s@ -SW  -- example src test
 
 # Bump versions to edge
 yarn jiti ./scripts/bump-edge
@@ -18,5 +18,5 @@ if [[ ! -z ${NODE_AUTH_TOKEN} ]] ; then
 fi
 
 # Release package
-echo "Publishing @docus/core-edge"
+echo "Publishing @docus/github-module-edge"
 npm publish -q --access public
