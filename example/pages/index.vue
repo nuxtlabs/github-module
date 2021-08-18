@@ -10,10 +10,8 @@
 
 <script lang="ts">
 export default {
-  async asyncData({ $docus }) {
-    const {
-      body: { releases }
-    } = await $docus.data('github-releases')
+  async asyncData({ $content }) {
+    const { releases } = await $content.fetch('github-releases')
 
     return {
       releases

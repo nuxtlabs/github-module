@@ -33,11 +33,14 @@
     "clean": "yarn clean:example && yarn clean:app && yarn clean:dist"
   },
   "dependencies": {
-    "@nuxt/kit": "^0.6.4",
+    "@nuxt/kit": "npm:@nuxt/kit-edge",
     "defu": "^5.0.0",
+    "object-hash": "^2.2.0",
     "ohmyfetch": "^0.2.0",
-    "remark-github": "^10.1.0",
-    "unbuild": "^0.4.2"
+    "remark-github": "^11.0.0",
+    "unbuild": "^0.4.2",
+    "unctx": "^1.0.1",
+    "unenv": "^0.3.2"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.14.5",
