@@ -53,12 +53,14 @@ export function cachify(fn: (...args: any[]) => any, opts: CachifyOptions) {
       entry.mtime = Date.now()
       entry.integrity = integrity
       delete pending[key]
+      // eslint-disable-next-line no-console
       storage.setItem(cacheKey, entry).catch(console.error)
     }
 
     const _resolvePromise = expired ? _resolve() : Promise.resolve()
 
     if (opts.swr && entry.value) {
+      // eslint-disable-next-line no-console
       _resolvePromise.catch(console.error)
       return Promise.resolve(entry)
     }
