@@ -5,13 +5,7 @@ const modulePath = resolve(__dirname, '../src/index')
 
 const config = withDocus({
   rootDir: __dirname,
-  buildModules: [modulePath],
-  nitro: {
-    externals: {
-      inline: [],
-      external: ['remark-github']
-    }
-  }
+  buildModules: [modulePath]
 })
 
 export default config
