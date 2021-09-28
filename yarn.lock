@@ -1065,9 +1065,9 @@
     vue-demi "^0.11.4"
 
 "@docus/core@npm:@docus/core-edge":
-  version "1.2.3-27206340.79d3666"
-  resolved "https://registry.yarnpkg.com/@docus/core-edge/-/core-edge-1.2.3-27206340.79d3666.tgz#521eee01e0102e069bbf0f43ef33e362449cfdef"
-  integrity sha512-qFMwoUpJ4BbZSuLMmZShmREPovD61oBg4aUi4tGIg6EKzN3MtSrEk0UygV4B3JgQcVQd1U++7nIOmUeICMDCZw==
+  version "1.2.3-27213941.ca8b998"
+  resolved "https://registry.yarnpkg.com/@docus/core-edge/-/core-edge-1.2.3-27213941.ca8b998.tgz#a6305f780c15050d70a50b4d89d74fc83769d341"
+  integrity sha512-00wm9aXtCi2YS5l4NmzWCInUBZ04VdZLrkcEmqEcz/OzHxBPbFbHv0eYXUHxF4wsj+fHNK0ReLQI/qAxI8ITRw==
   dependencies:
     "@docus/mdc" "npm:@docus/mdc-edge@latest"
     "@nuxt/bridge" "npm:@nuxt/bridge-edge"
@@ -1099,9 +1099,9 @@
     "@nuxt/kit" "^0.6.4"
 
 "@docus/mdc@npm:@docus/mdc-edge@latest":
-  version "0.1.0-27173665.ba0e20e"
-  resolved "https://registry.yarnpkg.com/@docus/mdc-edge/-/mdc-edge-0.1.0-27173665.ba0e20e.tgz#8c27d2cb2e9ef0913396dffe2e5b9270bf17cd15"
-  integrity sha512-4LiLGrffO2m+S7k6KZ/5whU0Wo8fYBx0piqs5ZIfvgF7nKZmPXe3tZhRDn+TB3weeBXwbnVhyY6rUs1zCooz8A==
+  version "0.1.0-27213978.98e4a28"
+  resolved "https://registry.yarnpkg.com/@docus/mdc-edge/-/mdc-edge-0.1.0-27213978.98e4a28.tgz#b5059dc3fa5352cc91cad6e262ef41bced9447f0"
+  integrity sha512-AYJz6FegpF/KLdM0nUXgd4BObd1DIbRk8KmDbQ8iZFye/Fbvj5sxyyPTdt8fbXNTk7Zx/Sl3wHggNl2q/ONfLw==
   dependencies:
     "@docus/remark-mdc" "npm:@docus/remark-mdc-edge"
     defu "^5.0.0"
@@ -1110,9 +1110,9 @@
     flat "^5.0.2"
     gray-matter "^4.0.3"
     html-tags "^3.1.0"
-    mdast-util-to-hast "^11.2.0"
+    mdast-util-to-hast "^11.3.0"
     mdurl "^1.0.1"
-    prismjs "^1.24.1"
+    prismjs "^1.25.0"
     rehype-raw "^6.1.0"
     rehype-sort-attribute-values "^4.0.0"
     rehype-sort-attributes "^4.0.0"
@@ -1122,7 +1122,7 @@
     remark-footnotes "^4.0.1"
     remark-gfm "^2.0.0"
     remark-parse "^10.0.0"
-    remark-rehype "^9.0.0"
+    remark-rehype "^9.1.0"
     remark-slug "^7.0.0"
     remark-squeeze-paragraphs "^5.0.0"
     scule "^0.2.1"
@@ -1131,9 +1131,9 @@
     unist-util-position "^4.0.1"
 
 "@docus/remark-mdc@npm:@docus/remark-mdc-edge":
-  version "0.1.0-27206853.e3834a0"
-  resolved "https://registry.yarnpkg.com/@docus/remark-mdc-edge/-/remark-mdc-edge-0.1.0-27206853.e3834a0.tgz#c561f74b9beef0994c5b98b1c2e5b32114b2fca4"
-  integrity sha512-vzzDELfDTVf25FuWAxVn8tmH9XtIrkoF30uXMI96huFBzIkNWukNFrdzsR7q4Yx9acV/sd+NzrWEg53mrMuhdA==
+  version "0.1.0-27213962.033b069"
+  resolved "https://registry.yarnpkg.com/@docus/remark-mdc-edge/-/remark-mdc-edge-0.1.0-27213962.033b069.tgz#37ddce1f5a4c4fbe1f1b4e52424f24a2bfed8d26"
+  integrity sha512-ruXVCKfu6/rBqXtCBriR116kvoXhTJyxYqpcpQ/CJP3X4bkIZzFLHpgIotrhiSGQzX/puzH30NjWZMa93Dr0kA==
   dependencies:
     flat "^5.0.2"
     gray-matter "^4.0.3"
@@ -6280,9 +6280,9 @@ ee-first@1.1.1:
   integrity sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=
 
 electron-to-chromium@^1.3.47, electron-to-chromium@^1.3.846:
-  version "1.3.851"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.851.tgz#457846fce94d5de25511570435a94f1a622203ac"
-  integrity sha512-Ak970eGtRSoHTaJkoDjdkeXYetbwm5Bl9pN/nPOQ3QzLfw1EWRjReOlWUra6o58SVgxfpwOT9U2P1BUXoJ57dw==
+  version "1.3.852"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.852.tgz#04091fd848b38e7248e4eb70c05e1f9befd2671b"
+  integrity sha512-vNbdzbbx3d7TStoC0oIVYz6X/tIezHXnreI+4a8I7EqAQ9hpHulz3ar8xChUNcG77A+TtPSKz9B9Xwpt9e1B5w==
 
 elliptic@^6.5.3:
   version "6.5.3"
@@ -9936,7 +9936,7 @@ mdast-util-gfm@^1.0.0:
     mdast-util-gfm-table "^1.0.0"
     mdast-util-gfm-task-list-item "^1.0.0"
 
-mdast-util-to-hast@^11.0.0, mdast-util-to-hast@^11.2.0:
+mdast-util-to-hast@^11.0.0, mdast-util-to-hast@^11.3.0:
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/mdast-util-to-hast/-/mdast-util-to-hast-11.3.0.tgz#ea9220617a710e80aa5cc3ac7cc9d4bb0440ae7a"
   integrity sha512-4o3Cli3hXPmm1LhB+6rqhfsIUBjnKFlIUZvudaermXB+4/KONdd/W4saWWkC+LBLbPMqhFSSTSRgafHsT5fVJw==
@@ -12440,7 +12440,7 @@ printj@~1.1.0:
   resolved "https://registry.yarnpkg.com/printj/-/printj-1.1.2.tgz#d90deb2975a8b9f600fb3a1c94e3f4c53c78a222"
   integrity sha512-zA2SmoLaxZyArQTOPj5LXecR+RagfPSU5Kw1qP+jkWeNlrq+eJZyY2oS68SU1Z/7/myXM4lo9716laOFAVStCQ==
 
-prismjs@^1.24.1:
+prismjs@^1.25.0:
   version "1.25.0"
   resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.25.0.tgz#6f822df1bdad965734b310b315a23315cf999756"
   integrity sha512-WCjJHl1KEWbnkQom1+SzftbtXMKQoezOCYs5rECqMN+jP+apI7ftoflyqigqzopSO3hMhTEb0mFClA8lkolgEg==
@@ -13110,7 +13110,7 @@ remark-parse@^10.0.0:
     mdast-util-from-markdown "^1.0.0"
     unified "^10.0.0"
 
-remark-rehype@^9.0.0:
+remark-rehype@^9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/remark-rehype/-/remark-rehype-9.1.0.tgz#e4b5b6e19c125b3780343eb66c3e9b99b0f06a81"
   integrity sha512-oLa6YmgAYg19zb0ZrBACh40hpBLteYROaPLhBXzLgjqyHQrN+gVP9N/FJvfzuNNuzCutktkroXEZBrxAxKhh7Q==
