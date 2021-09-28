@@ -4,6 +4,7 @@ import { DocusContext, resolveApiRoute } from '@docus/core'
 import { addServerMiddleware, defineNuxtModule, Nuxt, resolveModule } from '@nuxt/kit'
 import { useDocusConfig } from '@docus/app/kit'
 import githubDefaultConfig from './config'
+export * from './types'
 
 export default defineNuxtModule({
   setup(_moduleOptions: any, nuxt: Nuxt) {

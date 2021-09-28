@@ -1,4 +1,6 @@
-import { MDCRoot } from '@docus/mdc'
+import type { MDCRoot } from '@docus/mdc'
+
+import '@docus/app'
 
 export interface GitHubModuleConfig {
   repo?: string
