@@ -1,9 +1,11 @@
 import { resolve } from 'path'
 import defu from 'defu'
-import { DocusContext, resolveApiRoute } from '@docus/core'
-import { addServerMiddleware, defineNuxtModule, Nuxt, resolveModule } from '@nuxt/kit'
+import type { DocusContext } from '@docus/core'
+import { addServerMiddleware, defineNuxtModule, resolveModule } from '@nuxt/kit'
+import type { Nuxt } from '@nuxt/kit'
 import { useDocusConfig } from '@docus/app/kit'
 import githubDefaultConfig from './config'
+import { joinURL } from 'ufo'
 export * from './types'
 
 export default defineNuxtModule({
@@ -26,6 +28,11 @@ export default defineNuxtModule({
     })
 
     const runtimeDir = resolve(__dirname, 'runtime')
+
+    const resolveApiRoute = (route: string) => {
+      const apiBase = nuxt.options.content?.apiBase || '_docus'
+      return joinURL('/api', apiBase, route)
+    }
 
     addServerMiddleware({
       route: resolveApiRoute('github-releases'),

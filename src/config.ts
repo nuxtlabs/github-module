@@ -1,4 +1,4 @@
-import { GitHubModuleConfig } from './types'
+import type { GitHubModuleConfig } from './types'
 
 const githubDefaultConfig: GitHubModuleConfig = {
   repo: undefined,

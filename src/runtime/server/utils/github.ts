@@ -2,6 +2,7 @@ import { $fetch, FetchOptions } from 'ohmyfetch/node'
 import { getTransformer } from '@docus/core/dist/runtime/transformers/index.mjs'
 import { GithubRawRelease, GithubRelease, GitHubModuleConfig } from '../../../types'
 import { normalizeReleaseName } from './'
+
 let cachedReleases: GithubRelease[] = []
 
 export function get(): GithubRelease[] {
@@ -19,6 +20,7 @@ export async function fetch(settings: GitHubModuleConfig) {
 
   if (settings.releases) {
     const { apiUrl, repo, releases: releasesRepo } = settings
+
     const girhubReleases = await fetchGitHubReleases({
       apiUrl,
       repo: typeof releasesRepo === 'string' ? releasesRepo : repo,

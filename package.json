@@ -37,16 +37,16 @@
     "object-hash": "^2.2.0",
     "ohmyfetch": "^0.2.0",
     "remark-github": "^11.1.0",
-    "unbuild": "^0.5.4",
+    "unbuild": "^0.5.7",
     "unctx": "^1.0.2",
-    "unenv": "^0.3.8"
+    "unenv": "^0.3.10"
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
     "@babel/plugin-transform-runtime": "latest",
     "@docus/app": "npm:@docus/app-edge@latest",
-    "@docus/debug-theme": "^1.0.8",
+    "@docus/debug-theme": "^1.1.4",
     "@nuxt/test-utils": "latest",
     "@nuxt/types": "^2.15.8",
     "@nuxt/typescript-runtime": "latest",
@@ -58,10 +58,10 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-nuxt": "^2.0.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "jest": "^27.2.3",
-    "playwright": "^1.15.0",
+    "jest": "^27.2.5",
+    "playwright": "^1.15.2",
     "prettier": "^2.4.1",
-    "ts-jest": "^27.0.5"
+    "ts-jest": "^27.0.6"
   },
   "publishConfig": {
     "access": "public"
