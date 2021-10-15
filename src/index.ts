@@ -4,8 +4,8 @@ import type { DocusContext } from '@docus/core'
 import { addServerMiddleware, defineNuxtModule, resolveModule } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/kit'
 import { useDocusConfig } from '@docus/app/kit'
-import githubDefaultConfig from './config'
 import { joinURL } from 'ufo'
+import githubDefaultConfig from './config'
 export * from './types'
 
 export default defineNuxtModule({
