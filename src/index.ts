@@ -16,6 +16,7 @@ export default defineNuxtModule({
 
     nuxt.options.privateRuntimeConfig.github = config.github
 
+    // @ts-ignore
     nuxt.hook('docus:context', (context: DocusContext) => {
       const repository = typeof config.github.releases === 'string' ? config.github.releases : config.github.repo
 

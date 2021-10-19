@@ -12,11 +12,11 @@
   "license": "MIT",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./dist/index.mjs"
     }
   },
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
@@ -37,6 +37,7 @@
     "object-hash": "^2.2.0",
     "ohmyfetch": "^0.2.0",
     "remark-github": "^11.1.0",
+    "ufo": "^0.7.9",
     "unenv": "^0.3.10"
   },
   "devDependencies": {

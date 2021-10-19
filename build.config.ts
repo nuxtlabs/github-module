@@ -15,7 +15,6 @@ export default defineBuildConfig({
     '@docus/remark-mdc',
     '@docus/core',
     '@nuxt/kit',
-    'nuxt-i18n',
     '@nuxt/i18n'
   ]
 })
