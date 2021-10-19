@@ -9,15 +9,25 @@
 </template>
 
 <script lang="ts">
-export default {
-  async asyncData({ $docus }) {
-    const {
-      body: { releases }
-    } = await $docus.data('github-releases')
+import { useContent } from '@docus/app'
+import { useFetch } from '@nuxtjs/composition-api'
+import { defineComponent, ref } from '#app'
+
+export default defineComponent({
+  setup() {
+    const releases = ref([])
+
+    const $content = useContent()
+
+    useFetch(async () => {
+      const { releases: _releases } = await $content.fetch('github-releases')
+
+      releases.value = _releases
+    })
 
     return {
       releases
     }
   }
-}
+})
 </script>

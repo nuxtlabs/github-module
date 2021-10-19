@@ -1,34 +1,42 @@
-import { Module } from '@nuxt/types'
+import { resolve } from 'path'
 import defu from 'defu'
-import { useStorage, DocusContext } from '@docus/core'
-import { fetch } from './github'
-import githubDefaults from './settings'
+import type { DocusContext } from '@docus/core'
+import { addServerMiddleware, defineNuxtModule, resolveModule } from '@nuxt/kit'
+import type { Nuxt } from '@nuxt/kit'
+import { useDocusConfig } from '@docus/app/kit'
+import { joinURL } from 'ufo'
+import githubDefaultConfig from './config'
+export * from './types'
 
-export default <Module>function docusGithubModule() {
-  const { nuxt } = this
-  const { hook } = nuxt
-  const settings = this.$docus.settings
+export default defineNuxtModule({
+  setup(_moduleOptions: any, nuxt: Nuxt) {
+    const config = useDocusConfig()
 
-  settings.github = defu(settings.github, githubDefaults)
+    config.github = defu(config.github, githubDefaultConfig)
 
-  hook('docus:context', (context: DocusContext) => {
-    const repository = typeof settings.github.releases === 'string' ? settings.github.releases : settings.github.repo
-    context.transformers.markdown.remarkPlugins.push([
-      'remark-github',
-      {
-        repository
-      }
-    ])
-  })
+    nuxt.options.privateRuntimeConfig.github = config.github
 
-  hook('modules:done', () => {
-    // Fetch releases
-    fetch(settings.github).then(releases => {
-      const storage = useStorage()
+    nuxt.hook('docus:context', (context: DocusContext) => {
+      const repository = typeof config.github.releases === 'string' ? config.github.releases : config.github.repo
 
-      storage?.setItem('data:github-releases', {
-        releases
-      })
+      context.transformers.markdown.remarkPlugins?.push([
+        'remark-github',
+        {
+          repository
+        }
+      ])
     })
-  })
-}
+
+    const runtimeDir = resolve(__dirname, 'runtime')
+
+    const resolveApiRoute = (route: string) => {
+      const apiBase = nuxt.options.content?.apiBase || '_docus'
+      return joinURL('/api', apiBase, route)
+    }
+
+    addServerMiddleware({
+      route: resolveApiRoute('github-releases'),
+      handle: resolveModule('./server/api/releases', { paths: runtimeDir })
+    })
+  }
+})

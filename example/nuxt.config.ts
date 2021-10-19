@@ -1,10 +1,11 @@
 import { resolve } from 'path'
-import { withDocus } from '@docus/app'
+import { withDocus } from '@docus/app/kit'
 
-// Get local theme path
-const themePath = resolve(__dirname, './theme/index.ts')
+const modulePath = resolve(__dirname, '../src/index')
 
-export default withDocus(themePath, {
+const config = withDocus({
   rootDir: __dirname,
-  buildModules: ['../src']
+  buildModules: [modulePath]
 })
+
+export default config

@@ -1,7 +1,8 @@
 import { $fetch, FetchOptions } from 'ohmyfetch/node'
-import { getTransformer } from '@docus/core'
-import { normalizeReleaseName } from './utils'
-import { GithubRawRelease, GithubRelease, GithubReleaseOptions } from './types'
+import { getTransformer } from '@docus/core/dist/runtime/transformers/index.mjs'
+import { GithubRawRelease, GithubRelease, GitHubModuleConfig } from '../../../types'
+import { normalizeReleaseName } from './'
+
 let cachedReleases: GithubRelease[] = []
 
 export function get(): GithubRelease[] {
@@ -10,14 +11,16 @@ export function get(): GithubRelease[] {
 
 const getMajorVersion = (r: GithubRelease): number => (r.name ? Number(r.name.substring(1, 2)) : 0)
 
-export async function fetch(settings: GithubReleaseOptions) {
+export async function fetch(settings: GitHubModuleConfig) {
   const key = 'content:github-releases.md'
+
   let releases: GithubRelease[] = []
 
   const transform = getTransformer(key)
 
   if (settings.releases) {
     const { apiUrl, repo, releases: releasesRepo } = settings
+
     const girhubReleases = await fetchGitHubReleases({
       apiUrl,
       repo: typeof releasesRepo === 'string' ? releasesRepo : repo,
@@ -43,29 +46,30 @@ export async function fetch(settings: GithubReleaseOptions) {
   })
 
   cachedReleases = releases
+
   return releases
 }
 
-export async function fetchGitHubReleases({ apiUrl, repo, token }: GithubReleaseOptions) {
+export async function fetchGitHubReleases({ apiUrl, repo, token }: GitHubModuleConfig & { token: string }) {
   const options: FetchOptions = {}
-  if (token) {
-    options.headers = { Authorization: `token ${token}` }
-  }
+
+  if (token) options.headers = { Authorization: `token ${token}` }
+
   const url = `${apiUrl}/${repo}/releases`
+
+  /* eslint-disable no-console */
   const rawReleases: GithubRawRelease[] = await $fetch(url, options).catch(err => {
-    // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub releases on ${url} [${err.response.status}]`)
 
-    // eslint-disable-next-line no-console
     console.info('Make sure to provide GITHUB_TOKEN environment in `.env`')
 
     if (err.response.status !== 403) {
-      // eslint-disable-next-line no-console
       console.info('To disable fetching releases, set `github.releases` to `false` in `docus.config.js`')
     }
 
     return []
   })
+  /* eslint-disable */
 
   const releases = rawReleases
     .filter((r: any) => !r.draft)
