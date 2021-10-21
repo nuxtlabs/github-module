@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import defu from 'defu'
-import type { DocusContext } from '@docus/core'
+// import type { DocusContext } from '@docus/core'
 import { addServerMiddleware, defineNuxtModule, resolveModule } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/kit'
 import { useDocusConfig } from '@docus/app/kit'
@@ -17,16 +17,18 @@ export default defineNuxtModule({
     nuxt.options.privateRuntimeConfig.github = config.github
 
     // @ts-ignore
-    nuxt.hook('docus:context', (context: DocusContext) => {
-      const repository = typeof config.github.releases === 'string' ? config.github.releases : config.github.repo
+    // TODO: remark-github has issues
+    // we should resolve `node:fs` import form remark-github
+    // nuxt.hook('docus:context', (context: DocusContext) => {
+    //   const repository = typeof config.github.releases === 'string' ? config.github.releases : config.github.repo
 
-      context.transformers.markdown.remarkPlugins?.push([
-        'remark-github',
-        {
-          repository
-        }
-      ])
-    })
+    //   context.transformers.markdown.remarkPlugins?.push([
+    //     'remark-github',
+    //     {
+    //       repository
+    //     }
+    //   ])
+    // })
 
     const runtimeDir = resolve(__dirname, 'runtime')
 
