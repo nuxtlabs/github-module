@@ -17,18 +17,22 @@ export default defineNuxtModule({
     nuxt.options.privateRuntimeConfig.github = config.github
 
     // @ts-ignore
-    // TODO: remark-github has issues
-    // we should resolve `node:fs` import form remark-github
-    // nuxt.hook('docus:context', (context: DocusContext) => {
-    //   const repository = typeof config.github.releases === 'string' ? config.github.releases : config.github.repo
+    nuxt.hook('docus:context', (context: DocusContext) => {
+      const repository = typeof config.github.releases === 'string' ? config.github.releases : config.github.repo
 
-    //   context.transformers.markdown.remarkPlugins?.push([
-    //     'remark-github',
-    //     {
-    //       repository
-    //     }
-    //   ])
-    // })
+      if (!repository) {
+        console.warn('In order to use @docus/github, you must specify a repository as a reference for the module.')
+        console.warn('Please use the `github.releases` or `github.repo` key from your docus.config file.')
+        throw new Error('Missing repository.')
+      }
+
+      context.transformers.markdown.remarkPlugins?.push([
+        '@docus/remark-github',
+        {
+          repository
+        }
+      ])
+    })
 
     const runtimeDir = resolve(__dirname, 'runtime')
 
