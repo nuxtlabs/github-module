@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import defu from 'defu'
-// import type { DocusContext } from '@docus/core'
+import type { DocusContext } from '@docus/core'
 import { addServerMiddleware, defineNuxtModule, resolveModule } from '@nuxt/kit'
 import type { Nuxt } from '@nuxt/kit'
 import { useDocusConfig } from '@docus/app/kit'
@@ -21,7 +21,9 @@ export default defineNuxtModule({
       const repository = typeof config.github.releases === 'string' ? config.github.releases : config.github.repo
 
       if (!repository) {
+        // eslint-disable-next-line no-console
         console.warn('In order to use @docus/github, you must specify a repository as a reference for the module.')
+        // eslint-disable-next-line no-console
         console.warn('Please use the `github.releases` or `github.repo` key from your docus.config file.')
         throw new Error('Missing repository.')
       }

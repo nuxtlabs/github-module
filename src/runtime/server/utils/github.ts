@@ -1,6 +1,10 @@
-import { $fetch, FetchOptions } from 'ohmyfetch/node'
+// @ts-ignore
+import { $fetch } from 'ohmyfetch/node'
+// @ts-ignore
+import type { FetchOptions } from 'ohmyfetch/node'
+// @ts-ignore
 import { getTransformer } from '@docus/core/dist/runtime/transformers/index.mjs'
-import { GithubRawRelease, GithubRelease, GitHubModuleConfig } from '../../../types'
+import type { GithubRawRelease, GithubRelease, GitHubModuleConfig } from '../../../types'
 import { normalizeReleaseName } from './'
 
 let cachedReleases: GithubRelease[] = []
@@ -58,7 +62,7 @@ export async function fetchGitHubReleases({ apiUrl, repo, token }: GitHubModuleC
   const url = `${apiUrl}/${repo}/releases`
 
   /* eslint-disable no-console */
-  const rawReleases: GithubRawRelease[] = await $fetch(url, options).catch(err => {
+  const rawReleases: GithubRawRelease[] = await $fetch(url, options).catch((err: any) => {
     console.warn(`Cannot fetch GitHub releases on ${url} [${err.response.status}]`)
 
     console.info('Make sure to provide GITHUB_TOKEN environment in `.env`')
