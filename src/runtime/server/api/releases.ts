@@ -1,7 +1,6 @@
 // import { cachify } from '../utils/cache'
+import { useDocusConfig } from 'docus'
 import { fetch } from '../utils/github'
-// @ts-ignore
-import config from '#config'
 
 // const isProduction = process.env.NODE_ENV === 'production'
 
@@ -10,7 +9,8 @@ import config from '#config'
 // const fetchReleases = withCache('github-releases', () => fetch(config.github))
 
 export default async function githubReleases() {
-  // const releases = await fetchReleases()
+  const config = useDocusConfig()
+
   const releases = await fetch(config.github)
 
   return {

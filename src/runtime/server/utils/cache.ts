@@ -36,6 +36,7 @@ export function cachify(fn: (...args: any[]) => any, opts: CachifyOptions) {
 
   async function get(key: string, resolver: any) {
     const cacheKey = [opts.base, group, name, key].filter(Boolean).join(':')
+    // @ts-ignore
     const entry: CacheEntry = (await storage.getItem(cacheKey)) || {}
 
     const ttl = (opts.ttl ?? opts.ttl ?? 0) * 1000

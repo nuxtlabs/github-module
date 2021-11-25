@@ -1,5 +1,5 @@
 import { resolve } from 'path'
-import { withDocus } from '@docus/app/kit'
+import { withDocus } from 'docus'
 
 const modulePath = resolve(__dirname, '../src/index')
 
