@@ -15,6 +15,17 @@ export function useGitHub() {
   const repoUrl = computed(() => joinURL(config.value.github.url, config.value.github.repo))
 
   /**
+   * Generate a table of content from releases
+   */
+  const toc = computed(() =>
+    releases.value.map((release: any) => ({
+      id: release.name,
+      depth: 2,
+      text: release.name
+    }))
+  )
+
+  /**
    * Get a page link computed from a page object.
    */
   const getPageLink = (page: any) => {
@@ -42,6 +53,10 @@ export function useGitHub() {
     return link
   }
 
+  /**
+   * GitHub releases fetching helper.
+   * To be used from a component setup().
+   */
   const fetchReleases = () => {
     const $content = useDocusContent()
 
@@ -54,5 +69,5 @@ export function useGitHub() {
     releases.value = data
   }
 
-  return { repoUrl, getPageLink, fetchReleases, releases }
+  return { repoUrl, getPageLink, fetchReleases, releases, toc }
 }
