@@ -1,9 +1,8 @@
 import { resolve } from 'path'
 import defu from 'defu'
-import type { DocusContext } from '@docus/core'
 import { addServerMiddleware, defineNuxtModule, resolveModule } from '@nuxt/kit'
-import type { Nuxt } from '@nuxt/kit'
-import { useDocusConfig } from '@docus/app/kit'
+import type { Nuxt } from '@nuxt/schema'
+import { useDocusConfig } from 'docus'
 import { joinURL } from 'ufo'
 import githubDefaultConfig from './config'
 export * from './types'
@@ -14,10 +13,12 @@ export default defineNuxtModule({
 
     config.github = defu(config.github, githubDefaultConfig)
 
-    nuxt.options.privateRuntimeConfig.github = config.github
+    nuxt.options.privateRuntimeConfig.docus = defu(nuxt.options.privateRuntimeConfig.docus, {
+      github: config.github
+    })
 
     // @ts-ignore
-    nuxt.hook('docus:context', (context: DocusContext) => {
+    nuxt.hook('docus:context', (context: any) => {
       const repository = typeof config.github.releases === 'string' ? config.github.releases : config.github.repo
 
       if (!repository) {

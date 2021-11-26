@@ -1,6 +1,4 @@
 import type { MDCRoot } from '@docus/mdc'
-// eslint-disable-next-line
-import type { DocusConfig } from '@docus/app'
 
 export interface GitHubModuleConfig {
   repo?: string
@@ -27,7 +25,7 @@ export interface GithubRawRelease {
   published_at: number
 }
 
-declare module '@docus/app' {
+declare module 'docus' {
   interface DocusConfig {
     github?: GitHubModuleConfig
   }

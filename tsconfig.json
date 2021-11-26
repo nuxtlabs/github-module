@@ -15,7 +15,8 @@
     "allowJs": true,
     "types": ["node", "jest", "@nuxt/kit", "@nuxt/nitro", "@nuxt/types", "unplugin-vue2-script-setup/types"],
     "paths": {
-      "#app": ["./node_modules/@nuxt/bridge/dist/runtime"]
+      "#app": ["./node_modules/@nuxt/bridge/dist/runtime"],
+      "#docus": ["./node_modules/docus/dist/runtime"]
     }
   },
   "vueCompilerOptions": {

@@ -3,7 +3,7 @@ import { $fetch } from 'ohmyfetch/node'
 // @ts-ignore
 import type { FetchOptions } from 'ohmyfetch/node'
 // @ts-ignore
-import { getTransformer } from '@docus/core/dist/runtime/transformers/index.mjs'
+import { getTransformer } from 'docus/dist/runtime/transformers/index.mjs'
 import type { GithubRawRelease, GithubRelease, GitHubModuleConfig } from '../../../types'
 import { normalizeReleaseName } from './'
 

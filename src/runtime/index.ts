@@ -1,8 +1,6 @@
 import { joinURL } from 'ufo'
-import { useDocusConfig, useDocusContent } from '@docus/app'
-// @ts-ignore
-import { useFetch } from '@nuxtjs/composition-api'
-import { computed, useState } from '#app'
+import { useDocusConfig, useDocusContent } from '#docus'
+import { computed, useState, useLazyAsyncData } from '#app'
 
 /**
  * GitHub integration helpers.
@@ -47,11 +45,13 @@ export function useGitHub() {
   const fetchReleases = () => {
     const $content = useDocusContent()
 
-    useFetch(async () => {
-      const { releases: _releases } = await $content.fetch('github-releases')
+    const { data } = useLazyAsyncData('fetch-github-releases', async () => {
+      const { releases } = await $content.fetch('github-releases')
 
-      releases.value = _releases
+      return releases
     })
+
+    releases.value = data
   }
 
   return { repoUrl, getPageLink, fetchReleases, releases }
