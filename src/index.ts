@@ -13,7 +13,9 @@ export default defineNuxtModule({
 
     config.github = defu(config.github, githubDefaultConfig)
 
-    nuxt.options.privateRuntimeConfig.github = config.github
+    nuxt.options.privateRuntimeConfig.docus = defu(nuxt.options.privateRuntimeConfig.docus, {
+      github: config.github
+    })
 
     // @ts-ignore
     nuxt.hook('docus:context', (context: any) => {
