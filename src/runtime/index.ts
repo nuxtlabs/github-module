@@ -15,6 +15,11 @@ export function useGitHub() {
   const repoUrl = computed(() => joinURL(config.value.github.url, config.value.github.repo))
 
   /**
+   * Last release computed
+   */
+  const lastRelease = computed(() => releases.value[0] || false)
+
+  /**
    * Generate a table of content from releases
    */
   const toc = computed(() =>
@@ -69,5 +74,5 @@ export function useGitHub() {
     releases.value = data
   }
 
-  return { repoUrl, getPageLink, fetchReleases, releases, toc }
+  return { repoUrl, getPageLink, fetchReleases, releases, toc, lastRelease }
 }
