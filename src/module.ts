@@ -37,13 +37,11 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.runtimeConfig.github = {
       repo: options.repo,
-      release: options.release === false
-        ? false
-        : {
-            api: options.release.api,
-            repo: options.release.repo || options.repo,
-            token: options.release.token
-          }
+      release: {
+        api: options.release === false ? '' : options.release.api,
+        repo: options.release === false ? '' : options.release.repo || options.repo,
+        token: options.release === false ? '' : options.release.token
+      }
     }
 
     if (options.release !== false) {
