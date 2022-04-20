@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'url'
-import { addAutoImport, defineNuxtModule, resolveModule, useLogger } from '@nuxt/kit'
+import { addAutoImport, defineNuxtModule, resolveModule } from '@nuxt/kit'
 
 export interface ModuleOptions {
   repo: string,
