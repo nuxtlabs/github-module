@@ -1,5 +1,5 @@
 import { defineEventHandler } from 'h3'
-import { useRuntimeConfig, contentParse } from '#nitro'
+import * as nitro from '#nitro'
 
 interface GithubRawRelease {
   draft: boolean
@@ -18,18 +18,20 @@ interface GithubReleaseOptions {
 }
 
 export default defineEventHandler(async () => {
-  const { release: releaseConfig } = useRuntimeConfig().github
+  const { release: releaseConfig } = nitro.useRuntimeConfig().github
 
   // Fetches releases from GitHub
-  const githubReleases = await fetchGitHubReleases(releaseConfig)
+  let releases = await fetchGitHubReleases(releaseConfig)
 
-  // Parse release notes
-  const releases = await Promise.all(
-    githubReleases.map(async release => ({
-      ...release,
-      ...(await contentParse(`${release.name}.md`, release.body))
-    }))
-  )
+  // Parse release notes when `parse` option is enabled and `@nuxt/content` is installed.
+  if (releaseConfig.parse && typeof nitro.contentParse === 'function') {
+    releases = await Promise.all(
+      releases.map(async release => ({
+        ...release,
+        ...(await nitro.contentParse(`${release.name}.md`, release.body))
+      }))
+    )
+  }
 
   // Sort DESC by release version or date
   releases.sort((a, b) => a.v !== b.v ? b.v - a.v : a.date - b.date)

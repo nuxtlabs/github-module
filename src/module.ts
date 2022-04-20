@@ -7,6 +7,14 @@ export interface ModuleOptions {
     api: string
     repo: string
     token: string
+    /**
+     * Parse release notes markdown and return AST tree
+     *
+     * Note: This option is only available when you have `@nuxt/content` installed in your project.
+     *
+     * @default true
+     */
+    parse: boolean
   }
 }
 
@@ -20,7 +28,8 @@ export default defineNuxtModule<ModuleOptions>({
     release: {
       api: 'https://api.github.com/repos',
       repo: '',
-      token: undefined
+      token: undefined,
+      parse: true
     }
   },
   setup (options, nuxt) {
@@ -38,22 +47,16 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     if (options.release !== false) {
-      if (!nuxt.options.modules.includes('@nuxt/content')) {
-        useLogger('github-module').warn('To fetch GitHub releases, you need to install `@nuxt/content` module')
-        useLogger('github-module').info('To disable fetching releases, set `github.releases` to `false` in `docus.config.js`')
-        useLogger('github-module').info('To install `@nuxt/content`, run `npm install @nuxt/content`')
-      } else {
-        nuxt.options.nitro.handlers = nuxt.options.nitro.handlers || []
-        nuxt.options.nitro.handlers.push({
-          route: '/api/_github/releases',
-          handler: resolveModule('./server/api/releases', { paths: runtimeDir })
-        })
+      nuxt.options.nitro.handlers = nuxt.options.nitro.handlers || []
+      nuxt.options.nitro.handlers.push({
+        route: '/api/_github/releases',
+        handler: resolveModule('./server/api/releases', { paths: runtimeDir })
+      })
 
-        addAutoImport({
-          name: 'githubReleases',
-          from: resolveModule('./composables/githubReleases', { paths: runtimeDir })
-        })
-      }
+      addAutoImport({
+        name: 'githubReleases',
+        from: resolveModule('./composables/githubReleases', { paths: runtimeDir })
+      })
     }
   }
 })
