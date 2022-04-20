@@ -3,8 +3,8 @@ import githubModule from '..'
 
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/content',
-    githubModule
+    githubModule,
+    '@nuxt/content'
   ],
   github: {
     repo: 'nuxt/nuxt.js'

@@ -40,9 +40,17 @@ export default defineNuxtModule<ModuleOptions>({
       release: {
         api: options.release === false ? '' : options.release.api,
         repo: options.release === false ? '' : options.release.repo || options.repo,
-        token: options.release === false ? '' : options.release.token
+        token: options.release === false ? '' : options.release.token,
+        parse: options.release === false ? false : options.release.parse
       }
     }
+
+    // @ts-ignore
+    // Autolink issue/PR/commit links using `remark-github` plugin
+    nuxt.hook('content:context', (context) => {
+      context.markdown.remarkPlugins = context.markdown.remarkPlugins || []
+      context.markdown.remarkPlugins.push(['remark-github', { repository: (options.release || {}).repo || options.repo }])
+    })
 
     if (options.release !== false) {
       nuxt.options.nitro.handlers = nuxt.options.nitro.handlers || []
