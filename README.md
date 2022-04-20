@@ -1,6 +1,6 @@
-# Docus Github Module
+# Github Module
 
-> GitHub integration for Docus.
+> GitHub integration.
 
 ## Quick Setup
 
@@ -13,24 +13,37 @@ yarn add --dev @docus/github
 npm install --save-dev @docus/github
 ```
 
-2. Add `@docus/github` to the `buildModules` section of your `nuxt.config.js`
+2. Add `@docus/github` to the `modules` section of your `nuxt.config.ts`
 
 ```ts
 {
-  buildModules: ['@docus/github']
+  modules: [
+    '@docus/github'
+  ]
 }
 ```
 
+> Note: To fetch GitHub releases, you need to install `@nuxt/content` module. 
+
 ## Usage
 
-### Get GitHub releases using `$docus.data` util
+```vue [app.vue]
+<template>
+  <div>
+    <div v-for="release in releases" :key="release.name">
+      <ProseH2 :id="release.name">{{ release.name }}</ProseH2>
+      <Content :document="release" />
+    </div>
+  </div>
+</template>
 
-```js
-$docus.data('github-releases')
+<script setup lang="ts">
+const { data: releases } = await useAsyncData('releases', () => githubReleases())
+</script>
+
 ```
 
 ## Development
 
-1. Clone this repository
-2. Install dependencies using `yarn install`
-3. Start dev server using `yarn dev`
+- Run `npm run dev:prepare` to generate type stubs.
+- Use `npm run dev` to start [playground](./playground) in development mode.

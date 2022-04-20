@@ -1,18 +1,3 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "target": "esnext",
-    "module": "commonjs",
-    "lib": ["esnext", "dom"],
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "declaration": false,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "types": ["node", "jest", "@nuxt/types", "nuxt-i18n"],
-    "allowJs": true
-  },
-  "include": ["src/**/*", "src/module.ts", "example", "playground", "scripts"],
-  "exclude": ["node_modules", "dist"]
+  "extends": "./playground/.nuxt/tsconfig.json"
 }
