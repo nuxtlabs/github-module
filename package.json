@@ -25,12 +25,12 @@
   },
   "dependencies": {
     "@nuxt/content": "npm:@nuxt/content-edge@latest",
-    "@nuxt/kit": "npm:@nuxt/kit-edge@latest",
+    "@nuxt/kit": "^3.0.0-rc.1",
     "remark-github": "^11.2.2"
   },
   "devDependencies": {
     "@nuxt/module-builder": "latest",
-    "@nuxt/test-utils": "npm:@nuxt/test-utils-edge@latest",
+    "@nuxt/test-utils": "^3.0.0-rc.1",
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
     "nuxt": "^3.0.0-rc.1",
