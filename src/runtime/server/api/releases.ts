@@ -67,7 +67,7 @@ export async function fetchGitHubReleases ({ api, repo, token }: GithubReleaseOp
 
     if (err.response.status !== 403) {
       // eslint-disable-next-line no-console
-      console.info('To disable fetching releases, set `github.releases` to `false` in `docus.config.js`')
+      console.info('To disable fetching releases, set `github.releases` to `false` in `nuxt.config.ts`')
     }
 
     return []
