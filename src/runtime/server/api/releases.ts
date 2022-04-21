@@ -1,5 +1,5 @@
 import { defineEventHandler } from 'h3'
-import * as nitro from '#nitro'
+import * as imports from '#imports'
 
 interface GithubRawRelease {
   draft: boolean
@@ -18,17 +18,17 @@ interface GithubReleaseOptions {
 }
 
 export default defineEventHandler(async () => {
-  const { release: releaseConfig } = nitro.useRuntimeConfig().github
+  const { release: releaseConfig } = imports.useRuntimeConfig().github
 
   // Fetches releases from GitHub
   let releases = await fetchGitHubReleases(releaseConfig)
 
   // Parse release notes when `parse` option is enabled and `@nuxt/content` is installed.
-  if (releaseConfig.parse && typeof nitro.contentParse === 'function') {
+  if (releaseConfig.parse && typeof imports.contentParse === 'function') {
     releases = await Promise.all(
       releases.map(async release => ({
         ...release,
-        ...(await nitro.contentParse(`${release.name}.md`, release.body))
+        ...(await imports.contentParse(`${release.name}.md`, release.body))
       }))
     )
   }
