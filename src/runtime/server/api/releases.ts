@@ -24,10 +24,12 @@ export default defineEventHandler(async () => {
   let releases = await fetchGitHubReleases(releaseConfig)
 
   // Parse release notes when `parse` option is enabled and `@nuxt/content` is installed.
+  // eslint-disable-next-line import/namespace
   if (releaseConfig.parse && typeof imports.contentParse === 'function') {
     releases = await Promise.all(
       releases.map(async release => ({
         ...release,
+        // eslint-disable-next-line import/namespace
         ...(await imports.contentParse(`${release.name}.md`, release.body))
       }))
     )
