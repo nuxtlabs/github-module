@@ -39,7 +39,7 @@ export default defineNuxtModule<ModuleOptions>({
       repo: options.repo,
       releases: {
         api: options.releases === false ? '' : options.releases.api,
-        repo: options.releases === false ? '' : options.releases.repo || options.repo,
+        repo: options.releases === false ? '' : options.releases.repo || options.repo || process.env.GITHUB_REPO,
         token: options.releases === false ? '' : options.releases.token || process.env.GITHUB_TOKEN,
         parse: options.releases === false ? false : options.releases.parse
       }

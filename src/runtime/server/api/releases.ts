@@ -16,7 +16,7 @@ interface GithubReleasesOptions {
   token: string
 }
 
-export default imports.defineCachedEventHandler(async () => {
+export default cachedEventHandler(async () => {
   const { releases: releasesConfig } = imports.useRuntimeConfig().github
 
   // Fetches releases from GitHub
