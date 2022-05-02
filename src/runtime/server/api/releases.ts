@@ -11,21 +11,21 @@ interface GithubRawRelease {
   published_at: number
 }
 
-interface GithubReleaseOptions {
+interface GithubReleasesOptions {
   api: string
   repo: string
   token: string
 }
 
 export default defineEventHandler(async () => {
-  const { release: releaseConfig } = imports.useRuntimeConfig().github
+  const { releases: releasesConfig } = imports.useRuntimeConfig().github
 
   // Fetches releases from GitHub
-  let releases = await fetchGitHubReleases(releaseConfig)
+  let releases = await fetchGitHubReleases(releasesConfig)
 
   // Parse release notes when `parse` option is enabled and `@nuxt/content` is installed.
   // eslint-disable-next-line import/namespace
-  if (releaseConfig.parse && typeof imports.contentParse === 'function') {
+  if (releasesConfig.parse && typeof imports.contentParse === 'function') {
     releases = await Promise.all(
       releases.map(async release => ({
         ...release,
@@ -52,7 +52,7 @@ const normalizeReleaseName = (name: string) => {
   return name
 }
 
-export async function fetchGitHubReleases ({ api, repo, token }: GithubReleaseOptions) {
+export async function fetchGitHubReleases ({ api, repo, token }: GithubReleasesOptions) {
   const url = `${api}/${repo}/releases`
   const rawReleases = await $fetch<Array<GithubRawRelease>>(url, {
     headers: {

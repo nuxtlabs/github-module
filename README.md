@@ -1,10 +1,10 @@
 # Github Module
 
-> GitHub integration.
+> GitHub integration for [Nuxt](https://v3.nuxtjs.org) & [Content](https://content.nuxtjs.org)
 
-## Quick Setup
+## Setup
 
-1. Add `@docus/github` dependency to your project:
+Install `@docus/github` in your project:
 
 ```bash
 # Using Yarn
@@ -13,21 +13,26 @@ yarn add --dev @docus/github
 npm install --save-dev @docus/github
 ```
 
-2. Add `@docus/github` to the `modules` section of your `nuxt.config.ts`
+Then, add `@docus/github` to the `modules` section of your `nuxt.config.ts`:
 
 ```ts
-{
+import { defineNuxtConfig } from 'nuxt'
+
+export default defineNuxtConfig({
   modules: [
+    '@nuxt/content', // Required
     '@docus/github'
   ]
-}
+})
 ```
-
-> Note: To fetch GitHub releases, you need to install `@nuxt/content` module. 
 
 ## Usage
 
-```vue [app.vue]
+```vue
+<script setup lang="ts">
+const { data: releases } = await useAsyncData('releases', () => githubReleases())
+</script>
+
 <template>
   <div>
     <div v-for="release in releases" :key="release.name">
@@ -36,14 +41,13 @@ npm install --save-dev @docus/github
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-const { data: releases } = await useAsyncData('releases', () => githubReleases())
-</script>
-
 ```
 
 ## Development
 
-- Run `npm run dev:prepare` to generate type stubs.
-- Use `npm run dev` to start [playground](./playground) in development mode.
+1. Run `npm run dev:prepare` to generate type stubs.
+2. Create a [personal access token](https://github.com/settings/tokens) on GitHub and add it into `playground/.env`
+  ```env
+  GITHUB_TOKEN='<your-personal-token>'
+  ```
+3. Use `npm run dev` to start [playground](./playground) in development mode.

@@ -1,3 +1,7 @@
+<script setup>
+const { data: releases } = await useAsyncData('releases', () => githubReleases())
+</script>
+
 <template>
   <div>
     <div v-for="release in releases" :key="release.name">
@@ -8,7 +12,3 @@
     </div>
   </div>
 </template>
-
-<script setup>
-const { data: releases } = await useAsyncData('releases', () => githubReleases())
-</script>

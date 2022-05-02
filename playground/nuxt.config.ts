@@ -7,6 +7,6 @@ export default defineNuxtConfig({
     '@nuxt/content'
   ],
   github: {
-    repo: 'nuxt/nuxt.js'
+    repo: 'nuxt/framework'
   }
 })

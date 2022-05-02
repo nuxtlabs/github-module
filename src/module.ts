@@ -3,7 +3,7 @@ import { addAutoImport, defineNuxtModule, resolveModule } from '@nuxt/kit'
 
 export interface ModuleOptions {
   repo: string,
-  release: false | {
+  releases: false | {
     api: string
     repo: string
     token: string
@@ -20,12 +20,12 @@ export interface ModuleOptions {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: 'github-module',
+    name: '@docus/github',
     configKey: 'github'
   },
   defaults: {
     repo: '',
-    release: {
+    releases: {
       api: 'https://api.github.com/repos',
       repo: '',
       token: undefined,
@@ -37,11 +37,11 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.runtimeConfig.github = {
       repo: options.repo,
-      release: {
-        api: options.release === false ? '' : options.release.api,
-        repo: options.release === false ? '' : options.release.repo || options.repo,
-        token: options.release === false ? '' : options.release.token || process.env.GITHUB_TOKEN,
-        parse: options.release === false ? false : options.release.parse
+      releases: {
+        api: options.releases === false ? '' : options.releases.api,
+        repo: options.releases === false ? '' : options.releases.repo || options.repo,
+        token: options.releases === false ? '' : options.releases.token || process.env.GITHUB_TOKEN,
+        parse: options.releases === false ? false : options.releases.parse
       }
     }
 
@@ -49,10 +49,10 @@ export default defineNuxtModule<ModuleOptions>({
     // Autolink issue/PR/commit links using `remark-github` plugin
     nuxt.hook('content:context', (context) => {
       context.markdown.remarkPlugins = context.markdown.remarkPlugins || []
-      context.markdown.remarkPlugins.push(['remark-github', { repository: (options.release || {}).repo || options.repo }])
+      context.markdown.remarkPlugins.push(['remark-github', { repository: (options.releases || {}).repo || options.repo }])
     })
 
-    if (options.release !== false) {
+    if (options.releases !== false) {
       nuxt.options.nitro.handlers = nuxt.options.nitro.handlers || []
       nuxt.options.nitro.handlers.push({
         route: '/api/_github/releases',
