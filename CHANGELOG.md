@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/nuxtlabs/github-module/compare/v1.2.0...v1.2.1) (2022-05-02)
+
+
+### Bug Fixes
+
+* add GITHUB_REPO and use autoimport ([03992ad](https://github.com/nuxtlabs/github-module/commit/03992ad98325456eae0af191fb4f96e2b91e63f5))
+
 ## 1.2.0 (2022-05-02)
 
 
