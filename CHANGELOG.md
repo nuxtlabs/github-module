@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.2](https://github.com/nuxtlabs/github-module/compare/v1.2.1...v1.2.2) (2022-05-02)
+
+
+### Bug Fixes
+
+* correct package name ([cb7dc49](https://github.com/nuxtlabs/github-module/commit/cb7dc49956182a12814f14a3df4937c645835342))
+* imports ([d871f26](https://github.com/nuxtlabs/github-module/commit/d871f26ab3a7bb24aab37498afde19efbe166a7d))
+
 ### [1.2.1](https://github.com/nuxtlabs/github-module/compare/v1.2.0...v1.2.1) (2022-05-02)
 
 
