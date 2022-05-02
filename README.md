@@ -24,7 +24,7 @@ export default defineNuxtConfig({
     '@docus/github'
   ],
   github: {
-    repo: 'nuxt/framework'
+    repo: 'nuxt/framework' // Or use GITHUB_REPO in .env
   }
 })
 ```
