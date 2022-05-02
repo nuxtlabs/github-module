@@ -1,4 +1,3 @@
-import { defineEventHandler } from 'h3'
 import * as imports from '#imports'
 
 interface GithubRawRelease {
@@ -17,7 +16,7 @@ interface GithubReleasesOptions {
   token: string
 }
 
-export default defineEventHandler(async () => {
+export default imports.defineCachedEventHandler(async () => {
   const { releases: releasesConfig } = imports.useRuntimeConfig().github
 
   // Fetches releases from GitHub
@@ -39,6 +38,8 @@ export default defineEventHandler(async () => {
   releases.sort((a, b) => a.v !== b.v ? b.v - a.v : a.date - b.date)
 
   return releases
+}, {
+  maxAge: 60 // cache for one minute
 })
 
 const normalizeReleaseName = (name: string) => {

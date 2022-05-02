@@ -22,8 +22,17 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/content', // Required
     '@docus/github'
-  ]
+  ],
+  github: {
+    repo: 'nuxt/framework'
+  }
 })
+```
+
+Lastly, create a [personal access token](https://github.com/settings/tokens) on GitHub and add it into your `.env`:
+
+```env
+GITHUB_TOKEN='<your-personal-token>'
 ```
 
 ## Usage
@@ -41,6 +50,27 @@ const { data: releases } = await useAsyncData('releases', () => githubReleases()
     </div>
   </div>
 </template>
+```
+
+## Options
+
+```ts
+github: {
+  repo: string,
+  releases: false | {
+    api: string
+    repo: string
+    token: string
+    /**
+     * Parse release notes markdown and return AST tree
+     *
+     * Note: This option is only available when you have `@nuxt/content` installed in your project.
+     *
+     * @default true
+     */
+    parse: boolean
+  }
+}
 ```
 
 ## Development
