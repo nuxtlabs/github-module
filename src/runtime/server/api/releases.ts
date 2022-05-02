@@ -16,7 +16,8 @@ interface GithubReleasesOptions {
   token: string
 }
 
-export default cachedEventHandler(async () => {
+// eslint-disable-next-line import/namespace
+export default imports.defineCachedEventHandler(async () => {
   const { releases: releasesConfig } = imports.useRuntimeConfig().github
 
   // Fetches releases from GitHub
