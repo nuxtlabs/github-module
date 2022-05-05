@@ -79,10 +79,22 @@ export async function fetchGitHubReleases ({ api, repo, token }: GithubReleasesO
     .filter((r: any) => !r.draft)
     .map((release) => {
       return {
-        name: normalizeReleaseName(release.name || release.tag_name),
-        v: +normalizeReleaseName(release.tag_name).substring(1, 2),
-        date: release.published_at,
-        body: release.body
+        name: normalizeReleaseName(release?.name || release?.tag_name),
+        v: +normalizeReleaseName(release?.tag_name).substring(1, 2),
+        url: release?.html_url,
+        date: release?.published_at,
+        body: release?.body,
+        tarball: release?.tarball_url,
+        zipball: release?.zipball_url,
+        prerelease: release?.prerelease,
+        reactions: release?.reactions,
+        author: release?.author
+          ? {
+              name: release.author?.login,
+              url: release.author?.html_url,
+              avatar: release.author?.avatar_url
+            }
+          : false
       }
     })
 }
