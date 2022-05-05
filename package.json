@@ -1,6 +1,6 @@
 {
   "name": "@docus/github",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "license": "MIT",
   "type": "module",
   "exports": {
