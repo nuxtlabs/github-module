@@ -80,10 +80,10 @@ export async function fetchGitHubReleases ({ api, repo, token }: GithubReleasesO
     .map((release) => {
       return {
         name: normalizeReleaseName(release?.name || release?.tag_name),
-        v: +normalizeReleaseName(release?.tag_name).substring(1, 2),
-        url: release?.html_url,
         date: release?.published_at,
         body: release?.body,
+        v: +normalizeReleaseName(release?.tag_name).substring(1, 2),
+        url: release?.html_url,
         tarball: release?.tarball_url,
         zipball: release?.zipball_url,
         prerelease: release?.prerelease,
