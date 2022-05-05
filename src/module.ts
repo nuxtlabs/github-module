@@ -52,6 +52,11 @@ export default defineNuxtModule<ModuleOptions>({
       context.markdown.remarkPlugins.push(['remark-github', { repository: (options.releases || {}).repo || options.repo }])
     })
 
+    nuxt.hook('nitro:config', (nitroConfig) => {
+      nitroConfig.externals.traceInclude = nitroConfig.externals.traceInclude || []
+      nitroConfig.externals.traceInclude.push('remark-github')
+    })
+
     if (options.releases !== false) {
       nuxt.options.nitro.handlers = nuxt.options.nitro.handlers || []
       nuxt.options.nitro.handlers.push({
