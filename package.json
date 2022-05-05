@@ -35,6 +35,6 @@
     "eslint": "latest",
     "nuxt": "npm:nuxt3@latest",
     "standard-version": "^9.3.2",
-    "vitest": "^0.10.2"
+    "vitest": "^0.10.4"
   }
 }
