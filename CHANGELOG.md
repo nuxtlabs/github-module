@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.3](https://github.com/nuxtlabs/github-module/compare/v1.2.2...v1.2.3) (2022-05-05)
+
+
+### Bug Fixes
+
+* add `remark-github` to bundle ([31fd022](https://github.com/nuxtlabs/github-module/commit/31fd02295b206de42f443245e01d38709fb2624a))
+
 ### [1.2.2](https://github.com/nuxtlabs/github-module/compare/v1.2.1...v1.2.2) (2022-05-02)
 
 
