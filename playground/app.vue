@@ -1,5 +1,13 @@
 <script setup>
 const { data: releases } = await useAsyncData('releases', () => githubReleases())
+
+/*
+const { data: lastRelease } = await useAsyncData('releases', () => githubReleases({
+  repo: 'nuxt/framework',
+  per_page: 1,
+  page: 1
+}))
+*/
 </script>
 
 <template>
@@ -25,5 +33,9 @@ const { data: releases } = await useAsyncData('releases', () => githubReleases()
 
       <p>Author: {{ release.author }}</p>
     </div>
+
+    <pre>
+      {{ JSON.stringify(lastRelease, null, 2) }}
+    </pre>
   </div>
 </template>

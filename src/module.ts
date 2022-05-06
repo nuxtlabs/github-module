@@ -18,6 +18,30 @@ export interface ModuleOptions {
   }
 }
 
+export interface GithubQuery {
+  repo: string
+  per_page: string
+  page: string
+  token: string
+  api: string
+}
+
+export interface GithubRawRelease {
+  draft: boolean
+  name: string
+  // eslint-disable-next-line camelcase
+  tag_name: string
+  body: string
+  // eslint-disable-next-line camelcase
+  published_at: number
+}
+
+export interface GithubReleasesOptions {
+  api: string
+  repo: string
+  token: string
+}
+
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: '@docus/github',
