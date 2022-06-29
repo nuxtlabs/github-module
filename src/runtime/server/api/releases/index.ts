@@ -1,11 +1,18 @@
 import { useQuery } from 'h3'
 import { fetchReleases, parseRelease } from '../../utils/queries'
 import type { GithubReleasesQuery } from '../../../../module'
-import { defineCachedEventHandler, useRuntimeConfig } from '#imports'
+import * as imports from '#imports'
 
-export default defineCachedEventHandler(
+let handler
+if (process.env.NODE_ENV === 'development') {
+  handler = imports.defineEventHandler
+} else {
+  handler = imports.defineCachedEventHandler
+}
+
+export default handler(
   async ({ req }) => {
-    const config = useRuntimeConfig().github
+    const config = imports.useRuntimeConfig().github
 
     if (!config.releases) { return [] }
 
