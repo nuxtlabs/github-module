@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url'
-import { test, describe, expect } from 'vitest'
-import { setup, $fetch } from '@nuxt/test-utils'
+import { describe, expect, test } from 'vitest'
+import { $fetch, setup } from '@nuxt/test-utils'
 
 describe('fixtures:basic', async () => {
   await setup({
@@ -10,6 +10,7 @@ describe('fixtures:basic', async () => {
 
   test('List releases', async () => {
     const releases = await $fetch('/api/_github/releases')
+
     expect(releases.length).greaterThan(0)
 
     releases.forEach((component) => {
