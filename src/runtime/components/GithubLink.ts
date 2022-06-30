@@ -1,6 +1,7 @@
 import { joinURL } from 'ufo'
 import type { PropType } from 'vue'
 import { computed, defineComponent, useSlots } from 'vue'
+// @ts-ignore
 import { useRuntimeConfig } from '#imports'
 
 export default defineComponent({
@@ -11,7 +12,7 @@ export default defineComponent({
     owner: {
       type: String,
       default: () => useRuntimeConfig()?.github?.owner,
-      required: false,
+      required: false
     },
     /**
      * Repository name.
@@ -19,7 +20,7 @@ export default defineComponent({
     repo: {
       type: String,
       default: () => useRuntimeConfig()?.github?.repo,
-      required: false,
+      required: false
     },
     /**
      * The branch to use for the edit link.
@@ -27,7 +28,7 @@ export default defineComponent({
     branch: {
       type: String,
       default: () => useRuntimeConfig()?.github?.branch,
-      required: false,
+      required: false
     },
     /**
      * A base directory to append to the source path.
@@ -37,7 +38,7 @@ export default defineComponent({
     dir: {
       type: String,
       default: () => useRuntimeConfig()?.github?.dir,
-      required: false,
+      required: false
     },
     /**
      * Source file path.
@@ -47,6 +48,7 @@ export default defineComponent({
     source: {
       type: String,
       required: false,
+      default: undefined
     },
     /**
      * Use page from @nuxt/content.
@@ -54,6 +56,7 @@ export default defineComponent({
     page: {
       type: Object as PropType<any>,
       required: false,
+      default: undefined
     },
     /**
      * Content directory (to be used with `page`)
@@ -61,7 +64,7 @@ export default defineComponent({
     contentDir: {
       type: String,
       required: false,
-      default: 'content',
+      default: 'content'
     },
     /**
      * Send to an edit page or not.
@@ -69,10 +72,10 @@ export default defineComponent({
     edit: {
       type: Boolean,
       required: false,
-      default: true,
-    },
+      default: true
+    }
   },
-  setup(props) {
+  setup (props) {
     if (!props.owner || !props.repo || !props.branch) {
       throw new Error('If you want to use `GithubLink` component, you must specify: `owner`, `repo` and `branch`.')
     }
@@ -86,7 +89,7 @@ export default defineComponent({
       // Create the URL from a document data.
       if (props?.page?._path) {
         // Use content dir
-        if (props.contentDir) dirParts.push(props.contentDir)
+        if (props.contentDir) { dirParts.push(props.contentDir) }
 
         // Get page file from page data
         dirParts.push(props.page._file)
@@ -113,8 +116,7 @@ export default defineComponent({
     const url = computed(() => {
       const parts = [base.value]
 
-      if (props.edit) parts.push('edit')
-      else parts.push('tree')
+      if (props.edit) { parts.push('edit') } else { parts.push('tree') }
 
       parts.push(props.branch, ...path.value)
 
@@ -122,14 +124,14 @@ export default defineComponent({
     })
 
     return {
-      url,
+      url
     }
   },
-  render(ctx) {
+  render (ctx) {
     const { url } = ctx
 
     const slots = useSlots()
 
     return slots?.default?.({ url })
-  },
+  }
 })

@@ -1,6 +1,7 @@
-import defu from 'defu'
+import { defu } from 'defu'
 import consola from 'consola'
-import { addAutoImport, addComponent, createResolver, defineNuxtModule, resolveModule } from '@nuxt/kit'
+import { addAutoImport, addComponent, createResolver, defineNuxtModule, resolveModule, useLogger } from '@nuxt/kit'
+import { $fetch } from 'ohmyfetch'
 
 export interface GithubRepositoryOptions {
   owner?: string
@@ -65,6 +66,9 @@ export interface ModuleOptions extends GithubRepositoryOptions {
   remarkPlugin: boolean
   contributors: false | GithubContributorsOptions
   releases: false | GithubReleasesOptions
+  dev: {
+    check: boolean
+  }
 }
 
 export interface ModulePublicRuntimeConfig extends GithubRepositoryOptions {
@@ -109,9 +113,12 @@ export default defineNuxtModule<ModuleOptions>({
     },
     releases: {
       parse: true
+    },
+    dev: {
+      check: true
     }
   },
-  setup (options, nuxt) {
+  async setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
     const runtimeDir = resolve('./runtime')
 
@@ -159,24 +166,28 @@ export default defineNuxtModule<ModuleOptions>({
 
     nuxt.options.runtimeConfig.public.github = {
       ...repositoryOptions('root', false),
+      // @ts-ignore
       releases: {
         ...repositoryOptions('releases', false),
         parse: options.releases === false ? false : options.releases.parse
       },
       contributors: {
         ...repositoryOptions('contributors', false),
+        // @ts-ignore
         max: options.contributors === false ? false : options.contributors.max
       }
     }
 
     nuxt.options.runtimeConfig.github = {
       ...repositoryOptions('root'),
+      // @ts-ignore
       releases: {
         ...repositoryOptions('releases'),
         parse: options.releases === false ? false : options.releases.parse
       },
       contributors: {
         ...repositoryOptions('contributors'),
+        // @ts-ignore
         max: options.contributors === false ? false : options.contributors.max
       }
     }
@@ -191,8 +202,6 @@ export default defineNuxtModule<ModuleOptions>({
         } else {
           context.markdown.remarkPlugins['remark-github'] = { repository: `${options.owner}/${options.repo}` }
         }
-
-        console.log(context.markdown.remarkPlugins)
       })
       nuxt.hook('nitro:config', (nitroConfig) => {
         // @ts-ignore

@@ -1,5 +1,6 @@
 import { joinURL, withQuery } from 'ufo'
 import { graphql } from '@octokit/graphql'
+import { isError } from 'h3'
 import type {
   GithubContributorsOptions,
   GithubContributorsQuery,
@@ -7,15 +8,15 @@ import type {
   GithubRawRelease,
   GithubReleasesOptions,
   GithubReleasesQuery,
-  GithubRepositoryOptions,
+  GithubRepositoryOptions
 } from '../../../module'
 import { parseContent } from '#content/server'
 
-function isBot(user) {
+function isBot (user) {
   return user.login.includes('[bot]') || user.login.includes('-bot') || user.login.includes('.bot')
 }
 
-function normalizeRelease(release: any): GithubRawRelease {
+function normalizeRelease (release: any): GithubRawRelease {
   return {
     name: normalizeReleaseName(release?.name || release?.tag_name),
     tag_name: release?.tag_name,
@@ -30,13 +31,13 @@ function normalizeRelease(release: any): GithubRawRelease {
     author: {
       name: release?.author?.login,
       url: release?.author?.html_url,
-      avatar: release?.author?.avatar_url,
-    },
+      avatar: release?.author?.avatar_url
+    }
   }
 }
 
-function normalizeReleaseName(name: string) {
-  if (!name) return ''
+function normalizeReleaseName (name: string) {
+  if (!name) { return '' }
 
   // remove "Release " prefix from release name
   name = name.replace('Release ', '')
@@ -49,70 +50,81 @@ function normalizeReleaseName(name: string) {
   return name
 }
 
-export function githubGraphqlQuery<T = any>(query: string, options: Partial<GithubRepositoryOptions>): Promise<T> {
+export function githubGraphqlQuery<T = any> (query: string, options: Partial<GithubRepositoryOptions>): Promise<T> {
   const gq = graphql.defaults({
     headers: {
-      authorization: `token ${options.token}`,
-    },
+      authorization: `token ${options.token}`
+    }
   })
 
-  return gq<T>(query).catch(() => ({} as any))
+  return gq<T>(query)
 }
 
 export const parseRelease = async (release: GithubRawRelease) => {
   return {
     ...release,
     // Parse release notes when `@nuxt/content` is installed.
-    ...(typeof parseContent === 'function' && release?.body && release?.name ? await parseContent(`github:${release.name}.md`, release.body) : {}),
+    ...(typeof parseContent === 'function' && release?.body && release?.name ? await parseContent(`github:${release.name}.md`, release.body) : {})
   }
 }
 
-export async function fetchRepository({ api, owner, repo, token }: GithubContributorsOptions) {
+export async function fetchRepository ({ api, owner, repo, token }: Omit<GithubContributorsOptions, 'max'>) {
   const url = `${api}/repos/${owner}/${repo}`
 
   const repository = await $fetch<Array<GithubRawContributors>>(url, {
     headers: {
-      Authorization: token ? `token ${token}` : undefined,
-    },
-  }).catch((err) => {
-    console.warn(`Cannot fetch GitHub Repository on ${url} [${err.response?.status}]`)
+      Authorization: token ? `token ${token}` : undefined
+    }
+  }).catch((_) => {
+    /*
+
+    // eslint-disable-next-line no-console
+    console.warn(`Cannot fetch GitHub Repository on ${url} [${err.response?.status || 500}]`)
 
     // eslint-disable-next-line no-console
     console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
 
-    return []
+    */
+
+    return {}
   })
 
   return repository
 }
 
-export async function fetchRepositoryContributors(query: Partial<GithubContributorsQuery>, { api, owner, repo, token }: GithubContributorsOptions) {
+export async function fetchRepositoryContributors (query: Partial<GithubContributorsQuery>, { api, owner, repo, token }: GithubContributorsOptions) {
   let url = `${api}/repos/${owner}/${repo}/contributors`
 
   url = withQuery(url, query as any)
 
   const contributors = await $fetch<Array<GithubRawContributors>>(url, {
     headers: {
-      Authorization: token ? `token ${token}` : undefined,
-    },
-  }).catch((err) => {
-    console.warn(`Cannot fetch GitHub contributors on ${url} [${err.response?.status}]`)
+      Authorization: token ? `token ${token}` : undefined
+    }
+  }).catch((_) => {
+    /*
+
+    // eslint-disable-next-line no-console
+    console.warn(`Cannot fetch GitHub contributors on ${url} [${err.response?.status || 500}]`)
 
     // eslint-disable-next-line no-console
     console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
 
-    if (err.response.status !== 403) {
+    if (err?.response?.status !== 403) {
       // eslint-disable-next-line no-console
       console.info('To disable fetching contributors, set `github.contributors` to `false` in `nuxt.config.ts`')
     }
 
+    */
+
     return []
   })
 
+  // eslint-disable-next-line camelcase
   return contributors.map(({ avatar_url, login }) => ({ avatar_url, login }))
 }
 
-export async function fetchFileContributors({ source, max }: Partial<GithubContributorsQuery>, { owner, repo, branch, token, max: optionsMax }: GithubContributorsOptions) {
+export async function fetchFileContributors ({ source, max }: Partial<GithubContributorsQuery>, { owner, repo, branch, token, max: optionsMax }: GithubContributorsOptions) {
   max = max || optionsMax
 
   const data = await githubGraphqlQuery(
@@ -138,25 +150,40 @@ export async function fetchFileContributors({ source, max }: Partial<GithubContr
       }
     }
   }`,
-    { token },
-  )
+    { token }
+  ).catch((_) => {
+    /*
 
-  if (!data?.repository?.object?.history?.nodes) return []
+    // eslint-disable-next-line no-console
+    console.warn(`Cannot fetch GitHub file contributors on ${source} [${err.response?.status || 500}]`)
+
+    // eslint-disable-next-line no-console
+    console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
+
+    if (err?.response?.status !== 403) {
+      // eslint-disable-next-line no-console
+      console.info('To disable fetching contributors, set `github.contributors` to `false` in `nuxt.config.ts`')
+    }
+
+    */
+  })
+
+  if (!data?.repository?.object?.history?.nodes) { return [] }
 
   let users = data.repository.object.history.nodes
-    .map((node) => node.authors.nodes)
+    .map(node => node.authors.nodes)
     .flat()
-    .map((node) => node.user)
-    .filter((user) => user && user.name)
-    .filter((user) => !isBot(user))
+    .map(node => node.user)
+    .filter(user => user && user.name)
+    .filter(user => !isBot(user))
 
   // Unique
-  users = users.reduce((unique, user) => (unique.find((u) => u.login === user.login) ? unique : unique.concat(user)), [])
+  users = users.reduce((unique, user) => (unique.find(u => u.login === user.login) ? unique : unique.concat(user)), [])
 
   return users.map(({ avatarUrl, name, login }) => ({ avatar_url: avatarUrl, name, login }))
 }
 
-export async function fetchReleases(query: Partial<GithubReleasesQuery>, { api, repo, token, owner }: GithubReleasesOptions) {
+export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api, repo, token, owner }: GithubReleasesOptions) {
   const page = query?.page || 1
   const perPage = query?.per_page || 100
   const last = query?.last || false
@@ -173,10 +200,13 @@ export async function fetchReleases(query: Partial<GithubReleasesQuery>, { api, 
 
   const rawReleases = await $fetch<Array<GithubRawRelease>>(url, {
     headers: {
-      Authorization: token ? `token ${token}` : undefined,
-    },
-  }).catch((err) => {
-    console.warn(`Cannot fetch GitHub releases on ${url} [${err.response?.status}]`)
+      Authorization: token ? `token ${token}` : undefined
+    }
+  }).catch((_) => {
+    /*
+
+    // eslint-disable-next-line no-console
+    console.warn(`Cannot fetch GitHub releases on ${url} [${err.response?.status || 500}]`)
 
     // eslint-disable-next-line no-console
     console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
@@ -186,8 +216,12 @@ export async function fetchReleases(query: Partial<GithubReleasesQuery>, { api, 
       console.info('To disable fetching releases, set `github.releases` to `false` in `nuxt.config.ts`')
     }
 
-    return []
+    */
   })
 
-  return last ? normalizeRelease(rawReleases) : rawReleases.filter((r: any) => !r.draft).map(normalizeRelease)
+  if (!rawReleases) { return last ? {} : [] }
+
+  const releases = last ? normalizeRelease(rawReleases) : rawReleases.filter((r: any) => !r.draft).map(normalizeRelease)
+
+  return releases
 }

@@ -1,10 +1,10 @@
 {
-  "extends": [
-    "@nuxtjs/eslint-config-typescript"
-  ],
+  "root": true,
+  "extends": ["@nuxtjs/eslint-config-typescript"],
   "rules": {
-    "@typescript-eslint/no-unused-vars": [
-      "off"
-    ]
+    "vue/multi-word-component-names": "off",
+    "vue/no-multiple-template-root": "off",
+    "no-redeclare": "off",
+    "import/named": "off"
   }
 }

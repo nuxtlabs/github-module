@@ -2,6 +2,7 @@ import { defineComponent, useSlots } from 'vue'
 import type { PropType } from 'vue'
 import { useGithub } from '../composables/useGithub'
 import type { GithubContributorsQuery } from '../../module'
+// @ts-ignore
 import { useAsyncData } from '#imports'
 
 export default defineComponent({
@@ -9,9 +10,10 @@ export default defineComponent({
     query: {
       type: Object as PropType<GithubContributorsQuery>,
       required: false,
-    },
+      default: undefined
+    }
   },
-  async setup(props) {
+  async setup (props) {
     const { fetchContributors } = useGithub()
 
     const { data: contributors, refresh, pending } = await useAsyncData('github-contributors-component', () => fetchContributors(props.query))
@@ -19,12 +21,12 @@ export default defineComponent({
     return {
       contributors,
       refresh,
-      pending,
+      pending
     }
   },
-  render({ contributors, refresh, pending }) {
+  render ({ contributors, refresh, pending }) {
     const slots = useSlots()
 
     return slots?.default?.({ contributors, refresh, pending })
-  },
+  }
 })
