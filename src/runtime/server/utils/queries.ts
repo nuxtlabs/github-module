@@ -1,6 +1,5 @@
 import { joinURL, withQuery } from 'ufo'
 import { graphql } from '@octokit/graphql'
-import { isError } from 'h3'
 import type {
   GithubContributorsOptions,
   GithubContributorsQuery,

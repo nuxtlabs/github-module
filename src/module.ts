@@ -1,7 +1,6 @@
 import { defu } from 'defu'
 import consola from 'consola'
-import { addAutoImport, addComponent, createResolver, defineNuxtModule, resolveModule, useLogger } from '@nuxt/kit'
-import { $fetch } from 'ohmyfetch'
+import { addAutoImport, addComponent, createResolver, defineNuxtModule, resolveModule } from '@nuxt/kit'
 
 export interface GithubRepositoryOptions {
   owner?: string
@@ -66,9 +65,6 @@ export interface ModuleOptions extends GithubRepositoryOptions {
   remarkPlugin: boolean
   contributors: false | GithubContributorsOptions
   releases: false | GithubReleasesOptions
-  dev: {
-    check: boolean
-  }
 }
 
 export interface ModulePublicRuntimeConfig extends GithubRepositoryOptions {
@@ -113,12 +109,9 @@ export default defineNuxtModule<ModuleOptions>({
     },
     releases: {
       parse: true
-    },
-    dev: {
-      check: true
     }
   },
-  async setup (options, nuxt) {
+  setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
     const runtimeDir = resolve('./runtime')
 
