@@ -190,18 +190,7 @@ export default defineNuxtModule<ModuleOptions>({
       // @ts-ignore
       nuxt.hook('content:context', (context) => {
         context.markdown.remarkPlugins = context.markdown.remarkPlugins || {}
-        if (Array.isArray(context.markdown.remarkPlugins)) {
-          context.markdown.remarkPlugins.push(['remark-github', { repository: `${options.owner}/${options.repo}` }])
-        } else {
-          context.markdown.remarkPlugins['remark-github'] = { repository: `${options.owner}/${options.repo}` }
-        }
-      })
-      nuxt.hook('nitro:config', (nitroConfig) => {
-        // @ts-ignore
-        nitroConfig.externals.traceInclude = nitroConfig.externals.traceInclude || []
-
-        // @ts-ignore
-        nitroConfig.externals.traceInclude.push('remark-github')
+        context.markdown.remarkPlugins['remark-github'] = { repository: `${options.owner}/${options.repo}` }
       })
     }
 
