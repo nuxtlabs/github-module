@@ -1,0 +1,7 @@
+contact_links:
+  - name: 📚 Documentation
+    url: https://nuxt-github.netlify.app
+    about: Check documentation for usage
+  - name: 💬 Discussions
+    url: https://github.com/nuxtlabs/github-module/discussions
+    about: Use discussions if you have an idea for improvement and asking questions
