@@ -94,7 +94,7 @@ declare module '@nuxt/schema' {
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
-    name: '@docus/github',
+    name: '@nuxtlabs/github-module',
     configKey: 'github'
   },
   defaults: {

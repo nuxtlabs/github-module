@@ -1,9 +1,8 @@
 import { defineNuxtConfig } from 'nuxt'
-import colors from 'tailwindcss/colors.js'
 
 export default defineNuxtConfig({
   extends: [
-    '../node_modules/@docus/docs-theme'
+    '@nuxt-themes/docus'
   ],
   modules: [
     '../src/module.ts'
@@ -23,7 +22,19 @@ export default defineNuxtConfig({
       theme: {
         extend: {
           colors: {
-            primary: colors.pink
+            primary: {
+              DEFAULT: '#4183C4',
+              50: '#CDDEF0',
+              100: '#BED4EB',
+              200: '#9EC0E1',
+              300: '#7FACD7',
+              400: '#6097CE',
+              500: '#4183C4',
+              600: '#31679C',
+              700: '#234B72',
+              800: '#162F47',
+              900: '#09121C'
+            }
           }
         }
       }
