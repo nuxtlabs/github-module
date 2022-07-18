@@ -1,16 +1,11 @@
-import { joinURL, withQuery } from 'ufo'
+import { joinURL, withQuery, QueryObject } from 'ufo'
 import { graphql } from '@octokit/graphql'
+import { defu } from 'defu'
 import type {
-  GithubContributorsOptions,
-  GithubContributorsQuery,
-  GithubRawContributors,
-  GithubRawRelease,
-  GithubReleasesOptions,
-  GithubReleasesQuery,
-  GithubRepositoryOptions
+  ModuleOptions
 } from '../../../module'
+import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery } from '../../types'
 import { parseContent } from '#content/server'
-
 function isBot (user) {
   return user.login.includes('[bot]') || user.login.includes('-bot') || user.login.includes('.bot')
 }
@@ -49,7 +44,7 @@ function normalizeReleaseName (name: string) {
   return name
 }
 
-export function githubGraphqlQuery<T = any> (query: string, options: Partial<GithubRepositoryOptions>): Promise<T> {
+export function githubGraphqlQuery<T = any> (query: string, options: Partial<ModuleOptions>): Promise<T> {
   const gq = graphql.defaults({
     headers: {
       authorization: `token ${options.token}`
@@ -67,7 +62,13 @@ export const parseRelease = async (release: GithubRawRelease) => {
   }
 }
 
-export async function fetchRepository ({ api, owner, repo, token }: Omit<GithubContributorsOptions, 'max'>) {
+export function overrideConfig (config: ModuleOptions, query: GithubRepositoryOptions): GithubRepositoryOptions {
+  return (
+    ({ owner, repo, branch, api, token }) =>
+      ({ owner, repo, branch, api, token }))(defu(query, config))
+}
+
+export async function fetchRepository ({ api, owner, repo, token }: GithubRepositoryOptions) {
   const url = `${api}/repos/${owner}/${repo}`
 
   const repository = await $fetch<Array<GithubRawContributors>>(url, {
@@ -91,10 +92,10 @@ export async function fetchRepository ({ api, owner, repo, token }: Omit<GithubC
   return repository
 }
 
-export async function fetchRepositoryContributors (query: Partial<GithubContributorsQuery>, { api, owner, repo, token }: GithubContributorsOptions) {
+export async function fetchRepositoryContributors ({ max }: Partial<GithubContributorsQuery>, { api, owner, repo, token }: GithubRepositoryOptions) {
   let url = `${api}/repos/${owner}/${repo}/contributors`
 
-  url = withQuery(url, query as any)
+  url = withQuery(url, { max } as QueryObject)
 
   const contributors = await $fetch<Array<GithubRawContributors>>(url, {
     headers: {
@@ -123,9 +124,7 @@ export async function fetchRepositoryContributors (query: Partial<GithubContribu
   return contributors.map(({ avatar_url, login }) => ({ avatar_url, login }))
 }
 
-export async function fetchFileContributors ({ source, max }: Partial<GithubContributorsQuery>, { owner, repo, branch, token, max: optionsMax }: GithubContributorsOptions) {
-  max = max || optionsMax
-
+export async function fetchFileContributors ({ source, max }: Partial<GithubContributorsQuery>, { owner, repo, branch, token }: GithubRepositoryOptions & { maxContributors?: number }) {
   const data = await githubGraphqlQuery(
     `
   query {
@@ -182,7 +181,7 @@ export async function fetchFileContributors ({ source, max }: Partial<GithubCont
   return users.map(({ avatarUrl, name, login }) => ({ avatar_url: avatarUrl, name, login }))
 }
 
-export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api, repo, token, owner }: GithubReleasesOptions) {
+export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api, repo, token, owner }: GithubRepositoryOptions) {
   const page = query?.page || 1
   const perPage = query?.per_page || 100
   const last = query?.last || false

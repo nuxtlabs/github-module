@@ -1,22 +1,28 @@
-import { withQuery } from 'ufo'
+import { withQuery, QueryObject } from 'ufo'
+import { GithubRepositoryOptions, GithubContributorsQuery, GithubReleasesQuery, GithubRepository, GithubRawRelease, GithubRawContributors } from '../types'
 
 export const useGithub = () => {
-  const fetchRepository = () => $fetch('/api/_github/repository', { responseType: 'json' })
-
-  const fetchLastRelease = () => $fetch('/api/_github/last-release', { responseType: 'json' })
-
-  const fetchReleases = (query: any) => {
-    const url = withQuery('/api/_github/releases', query as any)
+  const fetchRepository = (query: GithubRepositoryOptions): Promise<GithubRepository> => {
+    const url = withQuery('/api/_github/repository', query as QueryObject)
     return $fetch(url, { responseType: 'json' })
   }
 
-  const fetchContributors = (query: any) => {
-    const url = withQuery('/api/_github/contributors', query as any)
+  const fetchLastRelease = (query: GithubRepositoryOptions): Promise<GithubRepository> => {
+    const url = withQuery('/api/_github/last-release', query as QueryObject)
+    return $fetch(url, { responseType: 'json' })
+  }
+  const fetchReleases = (query: GithubReleasesQuery): Promise<GithubRawRelease> => {
+    const url = withQuery('/api/_github/releases', query as QueryObject)
     return $fetch(url, { responseType: 'json' })
   }
 
-  const fetchFileContributors = (source = '', query: any) => {
-    const url = withQuery('/api/_github/contributors/file', { ...query, source } as any)
+  const fetchContributors = (query: GithubContributorsQuery): Promise<GithubRawContributors> => {
+    const url = withQuery('/api/_github/contributors', query as QueryObject)
+    return $fetch(url, { responseType: 'json' })
+  }
+
+  const fetchFileContributors = (query: GithubContributorsQuery): Promise<GithubRawContributors> => {
+    const url = withQuery('/api/_github/contributors/file', query as QueryObject)
     return $fetch(url, { responseType: 'json' })
   }
 

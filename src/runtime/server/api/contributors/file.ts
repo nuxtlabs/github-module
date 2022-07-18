@@ -1,6 +1,7 @@
 import { useQuery } from 'h3'
-import type { GithubContributorsQuery } from '../../../../module'
-import { fetchFileContributors } from '../../utils/queries'
+import type { ModuleOptions } from '../../../../module'
+import { fetchFileContributors, overrideConfig } from '../../utils/queries'
+import { GithubContributorsQuery } from '../../../types'
 import * as imports from '#imports'
 
 let handler
@@ -16,13 +17,19 @@ if (process.env.NODE_ENV === 'development') {
 
 export default handler(
   async ({ req }) => {
-    const config = imports.useRuntimeConfig().github
+    const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
 
     // Get query
-    const query = useQuery(req) as any as GithubContributorsQuery
+    const query = useQuery(req) as GithubContributorsQuery
+
+    // Merge query in module config
+    const githubConfig = overrideConfig(moduleConfig, query)
+
+    // Use max from config if not send in query
+    query.max = query.max ? Number(query.max) : moduleConfig.maxContributors
 
     // Fetches releases from GitHub
-    const contributors = await fetchFileContributors(query, config.contributors)
+    const contributors = await fetchFileContributors(query, githubConfig)
 
     return contributors
   },

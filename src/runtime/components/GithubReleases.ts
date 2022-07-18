@@ -2,7 +2,8 @@ import { defineComponent, ref, useSlots } from 'vue'
 import type { PropType } from 'vue'
 import { hash } from 'ohash'
 import { useGithub } from '../composables/useGithub'
-import type { GithubReleasesQuery } from '../../module'
+import { GithubReleasesQuery } from '../types'
+
 // @ts-ignore
 import { useAsyncData, useState } from '#imports'
 
@@ -11,7 +12,7 @@ export default defineComponent({
     query: {
       type: Object as PropType<GithubReleasesQuery>,
       required: false,
-      default: undefined
+      default: () => ({})
     }
   },
   async setup (props) {

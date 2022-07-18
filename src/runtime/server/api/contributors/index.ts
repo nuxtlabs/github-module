@@ -1,6 +1,7 @@
 import { useQuery } from 'h3'
-import type { GithubContributorsQuery } from '../../../../module'
-import { fetchRepositoryContributors } from '../../utils/queries'
+import type { ModuleOptions } from '../../../../module'
+import { fetchRepositoryContributors, overrideConfig } from '../../utils/queries'
+import { GithubContributorsQuery } from '../../../types'
 import * as imports from '#imports'
 
 let handler
@@ -17,13 +18,16 @@ if (process.env.NODE_ENV === 'development') {
 // eslint-disable-next-line import/namespace
 export default handler(
   async ({ req }) => {
-    const config = imports.useRuntimeConfig().github
+    const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
 
     // Get query
-    const query = useQuery(req) as any as GithubContributorsQuery
+    const query = useQuery(req) as GithubContributorsQuery
+
+    // Merge query in module config
+    const githubConfig = overrideConfig(moduleConfig, query)
 
     // Fetches releases from GitHub
-    const contributors = await fetchRepositoryContributors(query, config.contributors)
+    const contributors = await fetchRepositoryContributors(query, githubConfig)
 
     return contributors
   },
