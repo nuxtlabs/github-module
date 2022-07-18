@@ -4,7 +4,7 @@ import { defu } from 'defu'
 import type {
   ModuleOptions
 } from '../../../module'
-import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery } from '../../types'
+import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme } from '../../types'
 import { parseContent } from '#content/server'
 function isBot (user) {
   return user.login.includes('[bot]') || user.login.includes('-bot') || user.login.includes('.bot')
@@ -222,4 +222,28 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
   const releases = last ? normalizeRelease(rawReleases) : rawReleases.filter((r: any) => !r.draft).map(normalizeRelease)
 
   return releases
+}
+
+export async function fetchReadme ({ api, owner, repo, token }: GithubRepositoryOptions) {
+  const url = `${api}/repos/${owner}/${repo}/readme`
+
+  const readme = await $fetch<GithubRepositoryReadme>(url, {
+    headers: {
+      Authorization: token ? `token ${token}` : undefined
+    }
+  }).catch((_) => {
+    /*
+
+    // eslint-disable-next-line no-console
+    console.warn(`Cannot fetch GitHub readme on ${url} [${err.response?.status || 500}]`)
+
+    // eslint-disable-next-line no-console
+    console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
+
+    */
+
+    return {}
+  })
+
+  return readme
 }

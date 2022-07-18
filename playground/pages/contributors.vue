@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const owner = 'nuxt-community'
+const repo = 'supabase-module'
+</script>
+
 <template>
   <div>
     <!-- Fetch from config:
@@ -21,8 +26,3 @@
     </GithubContributors>
   </div>
 </template>
-
-<script setup lang="ts">
-const owner = 'nuxt-community'
-const repo = 'supabase-module'
-</script>

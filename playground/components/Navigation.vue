@@ -7,6 +7,10 @@ const nav = [
     path: '/'
   },
   {
+    name: 'Readme',
+    path: '/readme'
+  },
+  {
     name: 'Releases',
     path: '/releases'
   },

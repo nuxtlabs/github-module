@@ -103,6 +103,12 @@ export default defineNuxtModule<ModuleOptions>({
       handler: resolveModule('./server/api/repository', { paths: runtimeDir })
     })
 
+    // Setup readme file API
+    nitroConfig.handlers.push({
+      route: '/api/_github/readme',
+      handler: resolveModule('./server/api/readme', { paths: runtimeDir })
+    })
+
     // Repository component
     addComponent({
       name: 'GithubRepository',
@@ -114,6 +120,13 @@ export default defineNuxtModule<ModuleOptions>({
     addComponent({
       name: 'GithubLink',
       filePath: resolveModule('./components/GithubLink', { paths: runtimeDir }),
+      global: true
+    })
+
+    // GithubReadme component
+    addComponent({
+      name: 'GithubReadme',
+      filePath: resolveModule('./components/GithubReadme', { paths: runtimeDir }),
       global: true
     })
 

@@ -6,6 +6,20 @@ export interface GithubRepositoryOptions {
   token?: string
 }
 
+export interface GithubRepositoryReadme {
+  name: string
+  path: string
+  sha: string
+  size: number
+  url: string
+  html_url: string
+  git_url: string
+  download_url: string
+  type: 'file'
+  content: string,
+  encoding: 'base64'
+}
+
 export interface GithubRepositoryOwner {
   login: string
   id: number
