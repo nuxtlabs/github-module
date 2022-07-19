@@ -1,4 +1,4 @@
-import { defineComponent, ref, useSlots } from 'vue'
+import { defineComponent, useSlots } from 'vue'
 import type { PropType } from 'vue'
 import { hash } from 'ohash'
 import { useGithub } from '../composables/useGithub'
