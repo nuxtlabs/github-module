@@ -28,10 +28,8 @@ export default handler(
     // Use max from config if not send in query
     query.max = query.max ? Number(query.max) : moduleConfig.maxContributors
 
-    // Fetches releases from GitHub
-    const contributors = await fetchFileContributors(query, githubConfig)
-
-    return contributors
+    // Fetch contributors from GitHub
+    return await fetchFileContributors(query, githubConfig)
   },
   {
     maxAge: 60 // cache for one minute

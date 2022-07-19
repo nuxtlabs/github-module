@@ -11,6 +11,7 @@ export const useGithub = () => {
     const url = withQuery('/api/_github/last-release', query as QueryObject)
     return $fetch(url, { responseType: 'json' })
   }
+
   const fetchReleases = (query: GithubReleasesQuery): Promise<GithubRawRelease> => {
     const url = withQuery('/api/_github/releases', query as QueryObject)
     return $fetch(url, { responseType: 'json' })

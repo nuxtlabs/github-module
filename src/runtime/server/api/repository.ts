@@ -1,5 +1,6 @@
 import { fetchRepository, overrideConfig } from '../utils/queries'
-import { GithubRepositoryOptions, ModuleOptions } from '../../../module'
+import { ModuleOptions } from '../../../module'
+import { GithubRepository, GithubRepositoryOptions } from '../../types'
 import * as imports from '#imports'
 
 let handler
@@ -24,10 +25,8 @@ export default handler(
     // Merge query in module config
     const githubConfig = overrideConfig(moduleConfig, query)
 
-    // Fetches releases from GitHub
-    const repository = await fetchRepository(githubConfig)
-
-    return repository
+    // Fetch repository from GitHub
+    return await fetchRepository(githubConfig) as GithubRepository
   },
   {
     maxAge: 60 // cache for one minute

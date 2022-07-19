@@ -2,8 +2,8 @@ import { useQuery } from 'h3'
 import { overrideConfig, fetchReadme } from '../utils/queries'
 import type { ModuleOptions } from '../../../module'
 import { GithubRepositoryOptions, GithubRepositoryReadme } from '../../types'
-import { parseContent } from '#content/server'
 // @ts-ignore
+import { parseContent } from '#content/server'
 // @ts-ignore
 import * as imports from '#imports'
 
@@ -30,9 +30,10 @@ export default handler(
 
     if (!githubConfig.owner || !githubConfig.repo || !githubConfig.api) { return [] }
 
-    // Fetches releases from GitHub
+    // Fetch readme from GitHub
     const readme = await fetchReadme(githubConfig) as GithubRepositoryReadme
 
+    // Return parsed content
     return await parseContent(`${githubConfig.owner}:${githubConfig.repo}:readme.md`, Buffer.from(readme.content, 'base64').toString())
   },
   {

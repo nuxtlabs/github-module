@@ -26,10 +26,8 @@ export default handler(
     // Merge query in module config
     const githubConfig = overrideConfig(moduleConfig, query)
 
-    // Fetches releases from GitHub
-    const contributors = await fetchRepositoryContributors(query, githubConfig)
-
-    return contributors
+    // Fetch contributors from GitHub
+    return await fetchRepositoryContributors(query, githubConfig)
   },
   {
     maxAge: 60 // cache for one minute

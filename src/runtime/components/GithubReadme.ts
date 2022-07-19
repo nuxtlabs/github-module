@@ -1,4 +1,5 @@
 import { defineComponent, useSlots, PropType } from 'vue'
+import { hash } from 'ohash'
 import { useGithub } from '../composables/useGithub'
 import { GithubRepositoryOptions } from '../types'
 // @ts-ignore
@@ -15,7 +16,7 @@ export default defineComponent({
   async setup (props) {
     const { fetchReadme } = useGithub()
 
-    const { data: readme, refresh, pending } = await useAsyncData('github-repository-component', () => fetchReadme(props.query))
+    const { data: readme, refresh, pending } = await useAsyncData(`github-readme-${hash(props.query)}`, () => fetchReadme(props.query))
 
     return {
       readme,

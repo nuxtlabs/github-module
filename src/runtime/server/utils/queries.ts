@@ -4,7 +4,7 @@ import { defu } from 'defu'
 import type {
   ModuleOptions
 } from '../../../module'
-import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme } from '../../types'
+import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
 import { parseContent } from '#content/server'
 function isBot (user) {
   return user.login.includes('[bot]') || user.login.includes('-bot') || user.login.includes('.bot')
@@ -71,7 +71,7 @@ export function overrideConfig (config: ModuleOptions, query: GithubRepositoryOp
 export async function fetchRepository ({ api, owner, repo, token }: GithubRepositoryOptions) {
   const url = `${api}/repos/${owner}/${repo}`
 
-  const repository = await $fetch<Array<GithubRawContributors>>(url, {
+  const repository = await $fetch<GithubRepository>(url, {
     headers: {
       Authorization: token ? `token ${token}` : undefined
     }

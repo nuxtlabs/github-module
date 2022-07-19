@@ -5,7 +5,7 @@ import { useGithub } from '../composables/useGithub'
 import { GithubReleasesQuery } from '../types'
 
 // @ts-ignore
-import { useAsyncData, useState } from '#imports'
+import { useAsyncData } from '#imports'
 
 export default defineComponent({
   props: {
@@ -18,14 +18,14 @@ export default defineComponent({
   async setup (props) {
     const { fetchReleases } = useGithub()
 
-    const id = `github-releases-component-${hash(props.query)}`
+    // const id = `github-releases-${hash(props.query)}`
 
-    const { data: _releases, refresh, pending } = await useAsyncData(id, () => fetchReleases(props.query))
+    const { data: releases, refresh, pending } = await useAsyncData(`github-releases-${hash(props.query)}`, () => fetchReleases(props.query))
 
     // TODO: remove this painful workaround: hotfix for https://github.com/vuejs/core/issues/5513
     // @ts-ignore - Workaround
-    const releases = process.client ? useState(id) : ref()
-    releases.value = releases.value || _releases.value
+    // const releases = process.client ? useState(id) : ref()
+    // releases.value = releases.value || _releases.value
 
     return {
       releases,
