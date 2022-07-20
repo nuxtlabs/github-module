@@ -77,9 +77,7 @@ export const parseRelease = async (release: GithubRawRelease, githubConfig: Gith
 }
 
 export function overrideConfig (config: ModuleOptions, query: GithubRepositoryOptions): GithubRepositoryOptions {
-  return (
-    ({ owner, repo, branch, api, token }) =>
-      ({ owner, repo, branch, api, token }))(defu(query, config))
+  return (({ owner, repo, branch, api, token }) => ({ owner, repo, branch, api, token }))(defu(query, config))
 }
 
 export async function fetchRepository ({ api, owner, repo, token }: GithubRepositoryOptions) {
