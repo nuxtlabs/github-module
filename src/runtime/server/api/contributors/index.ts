@@ -2,6 +2,7 @@ import { useQuery } from 'h3'
 import type { ModuleOptions } from '../../../../module'
 import { fetchRepositoryContributors, overrideConfig } from '../../utils/queries'
 import { GithubContributorsQuery } from '../../../types'
+// @ts-ignore
 import * as imports from '#imports'
 
 let handler

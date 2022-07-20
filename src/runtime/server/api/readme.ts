@@ -33,8 +33,25 @@ export default handler(
     // Fetch readme from GitHub
     const readme = await fetchReadme(githubConfig) as GithubRepositoryReadme
 
-    // Return parsed content
-    return await parseContent(`${githubConfig.owner}:${githubConfig.repo}:readme.md`, Buffer.from(readme.content, 'base64').toString())
+    // Readme readable content
+    const content = Buffer.from(readme.content, 'base64').toString()
+
+    // Parse contents with @nuxt/content if enabled
+    if (moduleConfig.parseContents) {
+      // Return parsed content
+      return await parseContent(`${githubConfig.owner}:${githubConfig.repo}:readme.md`, content, {
+        markdown: {
+          remarkPlugins: {
+          // Use current Github repository for remark-github plugin
+            'remark-github': {
+              repository: `${githubConfig.owner}/${githubConfig.repo}`
+            }
+          }
+        }
+      })
+    }
+
+    return content
   },
   {
     maxAge: 60 // cache for one minute

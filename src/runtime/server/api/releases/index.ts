@@ -2,6 +2,7 @@ import { useQuery } from 'h3'
 import { fetchReleases, overrideConfig, parseRelease } from '../../utils/queries'
 import type { ModuleOptions } from '../../../../module'
 import { GithubRawRelease, GithubReleasesQuery } from '../../../types'
+// @ts-ignore
 import * as imports from '#imports'
 
 let handler
@@ -33,8 +34,8 @@ export default handler(
     if (!releases) { return }
 
     // Parse release notes when `parse` option is enabled and `@nuxt/content` is installed.
-    if (moduleConfig.parseReleases) {
-      releases = await Promise.all(releases.map(parseRelease))
+    if (moduleConfig.parseContents) {
+      releases = await Promise.all(releases.map(release => parseRelease(release, githubConfig)))
     }
 
     // Sort DESC by release version or date

@@ -13,13 +13,13 @@ export interface ModuleOptions extends GithubRepositoryOptions {
   contributors?: boolean
   maxContributors?: number
   /**
-   * Parse release notes markdown and return AST tree
+   * Parse contents (releases content, readme) Markdown and return AST tree.
    *
    * Note: This option is only available when you have `@nuxt/content` installed in your project.
    *
    * @default true
    */
-  parseReleases?: boolean
+  parseContents?: boolean
 }
 
 declare module '@nuxt/schema' {
@@ -49,7 +49,7 @@ export default defineNuxtModule<ModuleOptions>({
     releases: true,
     contributors: true,
     maxContributors: 100,
-    parseReleases: true
+    parseContents: true
   },
   setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
@@ -73,7 +73,7 @@ export default defineNuxtModule<ModuleOptions>({
       branch: options.branch || process.env.GITHUB_BRANCH,
       repo: options.repo || process.env.GITHUB_REPO,
       token: options.token || process.env.GITHUB_TOKEN,
-      parseReleases: options.parseReleases,
+      parseContents: options.parseContents,
       maxContributors: options.maxContributors
     }
 

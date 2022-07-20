@@ -5,7 +5,9 @@ import type {
   ModuleOptions
 } from '../../../module'
 import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
+// @ts-ignore
 import { parseContent } from '#content/server'
+
 function isBot (user) {
   return user.login.includes('[bot]') || user.login.includes('-bot') || user.login.includes('.bot')
 }
@@ -54,11 +56,19 @@ export function githubGraphqlQuery<T = any> (query: string, options: Partial<Mod
   return gq<T>(query)
 }
 
-export const parseRelease = async (release: GithubRawRelease) => {
+export const parseRelease = async (release: GithubRawRelease, githubConfig: GithubRepositoryOptions) => {
   return {
     ...release,
     // Parse release notes when `@nuxt/content` is installed.
-    ...(typeof parseContent === 'function' && release?.body && release?.name ? await parseContent(`github:${release.name}.md`, release.body) : {})
+    ...(typeof parseContent === 'function' && release?.body && release?.name ? await parseContent(`github:${release.name}.md`, release.body) : {}, {
+      markdown: {
+        remarkPlugins: {
+          'remark-github': {
+            repository: `${githubConfig.owner}/${githubConfig.repo}`
+          }
+        }
+      }
+    })
   }
 }
 
@@ -77,15 +87,12 @@ export async function fetchRepository ({ api, owner, repo, token }: GithubReposi
     }
   }).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub Repository on ${url} [${err.response?.status || 500}]`)
 
     // eslint-disable-next-line no-console
     console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
-
     */
-
     return {}
   })
 
@@ -103,7 +110,6 @@ export async function fetchRepositoryContributors ({ max }: Partial<GithubContri
     }
   }).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub contributors on ${url} [${err.response?.status || 500}]`)
 
@@ -114,9 +120,7 @@ export async function fetchRepositoryContributors ({ max }: Partial<GithubContri
       // eslint-disable-next-line no-console
       console.info('To disable fetching contributors, set `github.contributors` to `false` in `nuxt.config.ts`')
     }
-
     */
-
     return []
   })
 
@@ -151,7 +155,6 @@ export async function fetchFileContributors ({ source, max }: Partial<GithubCont
     { token }
   ).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub file contributors on ${source} [${err.response?.status || 500}]`)
 
@@ -162,7 +165,6 @@ export async function fetchFileContributors ({ source, max }: Partial<GithubCont
       // eslint-disable-next-line no-console
       console.info('To disable fetching contributors, set `github.contributors` to `false` in `nuxt.config.ts`')
     }
-
     */
   })
 
@@ -202,7 +204,6 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
     }
   }).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub releases on ${url} [${err.response?.status || 500}]`)
 
@@ -213,7 +214,6 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
       // eslint-disable-next-line no-console
       console.info('To disable fetching releases, set `github.releases` to `false` in `nuxt.config.ts`')
     }
-
     */
   })
 
@@ -233,13 +233,11 @@ export async function fetchReadme ({ api, owner, repo, token }: GithubRepository
     }
   }).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub readme on ${url} [${err.response?.status || 500}]`)
 
     // eslint-disable-next-line no-console
     console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
-
     */
 
     return {}

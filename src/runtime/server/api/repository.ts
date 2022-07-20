@@ -1,6 +1,8 @@
+import { useQuery } from 'h3'
 import { fetchRepository, overrideConfig } from '../utils/queries'
 import { ModuleOptions } from '../../../module'
 import { GithubRepository, GithubRepositoryOptions } from '../../types'
+// @ts-ignore
 import * as imports from '#imports'
 
 let handler

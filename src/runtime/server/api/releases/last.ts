@@ -1,6 +1,8 @@
+import { useQuery } from 'h3'
 import { fetchReleases, overrideConfig, parseRelease } from '../../utils/queries'
 import type { ModuleOptions } from '../../../../module'
 import { GithubRawRelease, GithubRepositoryOptions } from '../../../types'
+// @ts-ignore
 import * as imports from '#imports'
 
 let handler
@@ -29,8 +31,8 @@ export default handler(
     // Fetches releases from GitHub
     let release = await fetchReleases({ last: true }, githubConfig)
 
-    if (release && moduleConfig.parseReleases) {
-      release = await parseRelease(release as GithubRawRelease)
+    if (release && moduleConfig.parseContents) {
+      release = await parseRelease(release as GithubRawRelease, githubConfig)
     }
 
     return release

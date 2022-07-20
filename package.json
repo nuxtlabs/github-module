@@ -29,6 +29,7 @@
     "@nuxt/kit": "^3.0.0-rc.5",
     "@octokit/graphql": "^5.0.0",
     "@octokit/rest": "^19.0.3",
+    "remark-gfm": "^3.0.1",
     "remark-github": "^11.2.4"
   },
   "devDependencies": {
