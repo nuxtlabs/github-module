@@ -60,15 +60,19 @@ export const parseRelease = async (release: GithubRawRelease, githubConfig: Gith
   return {
     ...release,
     // Parse release notes when `@nuxt/content` is installed.
-    ...(typeof parseContent === 'function' && release?.body && release?.name ? await parseContent(`github:${release.name}.md`, release.body) : {}, {
-      markdown: {
-        remarkPlugins: {
-          'remark-github': {
-            repository: `${githubConfig.owner}/${githubConfig.repo}`
+    ...(
+      typeof parseContent === 'function' && release?.body && release?.name
+        ? await parseContent(`github:${release.name}.md`, release.body, {
+          markdown: {
+            remarkPlugins: {
+              'remark-github': {
+                repository: `${githubConfig.owner}/${githubConfig.repo}`
+              }
+            }
           }
-        }
-      }
-    })
+        })
+        : {}
+    )
   }
 }
 
