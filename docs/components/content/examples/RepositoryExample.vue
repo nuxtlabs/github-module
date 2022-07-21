@@ -1,5 +1,5 @@
 <template>
   <GithubRepository v-slot="{ repository }">
-    <Repository :value="repository" />
+    <Repository v-if="repository" :value="repository" />
   </GithubRepository>
 </template>

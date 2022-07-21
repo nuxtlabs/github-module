@@ -1,14 +1,11 @@
-import { joinURL, withQuery } from 'ufo'
+import { joinURL, withQuery, QueryObject } from 'ufo'
 import { graphql } from '@octokit/graphql'
+import { defu } from 'defu'
 import type {
-  GithubContributorsOptions,
-  GithubContributorsQuery,
-  GithubRawContributors,
-  GithubRawRelease,
-  GithubReleasesOptions,
-  GithubReleasesQuery,
-  GithubRepositoryOptions
+  ModuleOptions
 } from '../../../module'
+import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
+// @ts-ignore
 import { parseContent } from '#content/server'
 
 function isBot (user) {
@@ -49,7 +46,7 @@ function normalizeReleaseName (name: string) {
   return name
 }
 
-export function githubGraphqlQuery<T = any> (query: string, options: Partial<GithubRepositoryOptions>): Promise<T> {
+export function githubGraphqlQuery<T = any> (query: string, options: Partial<ModuleOptions>): Promise<T> {
   const gq = graphql.defaults({
     headers: {
       authorization: `token ${options.token}`
@@ -59,42 +56,55 @@ export function githubGraphqlQuery<T = any> (query: string, options: Partial<Git
   return gq<T>(query)
 }
 
-export const parseRelease = async (release: GithubRawRelease) => {
+export const parseRelease = async (release: GithubRawRelease, githubConfig: GithubRepositoryOptions) => {
   return {
     ...release,
     // Parse release notes when `@nuxt/content` is installed.
-    ...(typeof parseContent === 'function' && release?.body && release?.name ? await parseContent(`github:${release.name}.md`, release.body) : {})
+    ...(
+      typeof parseContent === 'function' && release?.body && release?.name
+        ? await parseContent(`github:${release.name}.md`, release.body, {
+          markdown: {
+            remarkPlugins: {
+              'remark-github': {
+                repository: `${githubConfig.owner}/${githubConfig.repo}`
+              }
+            }
+          }
+        })
+        : {}
+    )
   }
 }
 
-export async function fetchRepository ({ api, owner, repo, token }: Omit<GithubContributorsOptions, 'max'>) {
+export function overrideConfig (config: ModuleOptions, query: GithubRepositoryOptions): GithubRepositoryOptions {
+  return (({ owner, repo, branch, api, token }) => ({ owner, repo, branch, api, token }))(defu(query, config))
+}
+
+export async function fetchRepository ({ api, owner, repo, token }: GithubRepositoryOptions) {
   const url = `${api}/repos/${owner}/${repo}`
 
-  const repository = await $fetch<Array<GithubRawContributors>>(url, {
+  const repository = await $fetch<GithubRepository>(url, {
     headers: {
       Authorization: token ? `token ${token}` : undefined
     }
   }).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub Repository on ${url} [${err.response?.status || 500}]`)
 
     // eslint-disable-next-line no-console
     console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
-
     */
-
     return {}
   })
 
   return repository
 }
 
-export async function fetchRepositoryContributors (query: Partial<GithubContributorsQuery>, { api, owner, repo, token }: GithubContributorsOptions) {
+export async function fetchRepositoryContributors ({ max }: Partial<GithubContributorsQuery>, { api, owner, repo, token }: GithubRepositoryOptions) {
   let url = `${api}/repos/${owner}/${repo}/contributors`
 
-  url = withQuery(url, query as any)
+  url = withQuery(url, { max } as QueryObject)
 
   const contributors = await $fetch<Array<GithubRawContributors>>(url, {
     headers: {
@@ -102,7 +112,6 @@ export async function fetchRepositoryContributors (query: Partial<GithubContribu
     }
   }).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub contributors on ${url} [${err.response?.status || 500}]`)
 
@@ -113,9 +122,7 @@ export async function fetchRepositoryContributors (query: Partial<GithubContribu
       // eslint-disable-next-line no-console
       console.info('To disable fetching contributors, set `github.contributors` to `false` in `nuxt.config.ts`')
     }
-
     */
-
     return []
   })
 
@@ -123,9 +130,7 @@ export async function fetchRepositoryContributors (query: Partial<GithubContribu
   return contributors.map(({ avatar_url, login }) => ({ avatar_url, login }))
 }
 
-export async function fetchFileContributors ({ source, max }: Partial<GithubContributorsQuery>, { owner, repo, branch, token, max: optionsMax }: GithubContributorsOptions) {
-  max = max || optionsMax
-
+export async function fetchFileContributors ({ source, max }: Partial<GithubContributorsQuery>, { owner, repo, branch, token }: GithubRepositoryOptions & { maxContributors?: number }) {
   const data = await githubGraphqlQuery(
     `
   query {
@@ -152,7 +157,6 @@ export async function fetchFileContributors ({ source, max }: Partial<GithubCont
     { token }
   ).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub file contributors on ${source} [${err.response?.status || 500}]`)
 
@@ -163,7 +167,6 @@ export async function fetchFileContributors ({ source, max }: Partial<GithubCont
       // eslint-disable-next-line no-console
       console.info('To disable fetching contributors, set `github.contributors` to `false` in `nuxt.config.ts`')
     }
-
     */
   })
 
@@ -182,7 +185,7 @@ export async function fetchFileContributors ({ source, max }: Partial<GithubCont
   return users.map(({ avatarUrl, name, login }) => ({ avatar_url: avatarUrl, name, login }))
 }
 
-export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api, repo, token, owner }: GithubReleasesOptions) {
+export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api, repo, token, owner }: GithubRepositoryOptions) {
   const page = query?.page || 1
   const perPage = query?.per_page || 100
   const last = query?.last || false
@@ -203,7 +206,6 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
     }
   }).catch((_) => {
     /*
-
     // eslint-disable-next-line no-console
     console.warn(`Cannot fetch GitHub releases on ${url} [${err.response?.status || 500}]`)
 
@@ -214,7 +216,6 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
       // eslint-disable-next-line no-console
       console.info('To disable fetching releases, set `github.releases` to `false` in `nuxt.config.ts`')
     }
-
     */
   })
 
@@ -223,4 +224,26 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
   const releases = last ? normalizeRelease(rawReleases) : rawReleases.filter((r: any) => !r.draft).map(normalizeRelease)
 
   return releases
+}
+
+export async function fetchReadme ({ api, owner, repo, token }: GithubRepositoryOptions) {
+  const url = `${api}/repos/${owner}/${repo}/readme`
+
+  const readme = await $fetch<GithubRepositoryReadme>(url, {
+    headers: {
+      Authorization: token ? `token ${token}` : undefined
+    }
+  }).catch((_) => {
+    /*
+    // eslint-disable-next-line no-console
+    console.warn(`Cannot fetch GitHub readme on ${url} [${err.response?.status || 500}]`)
+
+    // eslint-disable-next-line no-console
+    console.info('If your repository is private, make sure to provide GITHUB_TOKEN environment in `.env`')
+    */
+
+    return {}
+  })
+
+  return readme
 }

@@ -1,4 +1,8 @@
-import { fetchRepository } from '../utils/queries'
+import { useQuery } from 'h3'
+import { fetchRepository, overrideConfig } from '../utils/queries'
+import { ModuleOptions } from '../../../module'
+import { GithubRepository, GithubRepositoryOptions } from '../../types'
+// @ts-ignore
 import * as imports from '#imports'
 
 let handler
@@ -14,13 +18,17 @@ if (process.env.NODE_ENV === 'development') {
 
 // eslint-disable-next-line import/namespace
 export default handler(
-  async () => {
-    const config = imports.useRuntimeConfig().github
+  async ({ req }) => {
+    const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
 
-    // Fetches releases from GitHub
-    const repository = await fetchRepository(config)
+    // Get query
+    const query = useQuery(req) as GithubRepositoryOptions
 
-    return repository
+    // Merge query in module config
+    const githubConfig = overrideConfig(moduleConfig, query)
+
+    // Fetch repository from GitHub
+    return await fetchRepository(githubConfig) as GithubRepository
   },
   {
     maxAge: 60 // cache for one minute

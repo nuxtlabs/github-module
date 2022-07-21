@@ -26,20 +26,21 @@
     "release": "yarn test && standard-version && git push --follow-tags && npm publish"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0-rc.5",
+    "@nuxt/kit": "^3.0.0-rc.6",
     "@octokit/graphql": "^5.0.0",
     "@octokit/rest": "^19.0.3",
+    "remark-gfm": "^3.0.1",
     "remark-github": "^11.2.4"
   },
   "devDependencies": {
     "@nuxt-themes/docus": "npm:@nuxt-themes/docus-edge@latest",
     "@nuxt/content": "npm:@nuxt/content-edge@latest",
     "@nuxt/module-builder": "latest",
-    "@nuxt/test-utils": "^3.0.0-rc.5",
+    "@nuxt/test-utils": "^3.0.0-rc.6",
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
     "nuxt": "npm:nuxt3@latest",
     "standard-version": "^9.5.0",
-    "vitest": "^0.18.0"
+    "vitest": "^0.18.1"
   }
 }

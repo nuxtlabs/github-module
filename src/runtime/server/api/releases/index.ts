@@ -1,6 +1,8 @@
 import { useQuery } from 'h3'
-import { fetchReleases, parseRelease } from '../../utils/queries'
-import type { GithubRawRelease, GithubReleasesQuery } from '../../../../module'
+import { fetchReleases, overrideConfig, parseRelease } from '../../utils/queries'
+import type { ModuleOptions } from '../../../../module'
+import { GithubRawRelease, GithubReleasesQuery } from '../../../types'
+// @ts-ignore
 import * as imports from '#imports'
 
 let handler
@@ -16,21 +18,24 @@ if (process.env.NODE_ENV === 'development') {
 
 export default handler(
   async ({ req }) => {
-    const config = imports.useRuntimeConfig().github
-
-    if (!config.releases) { return [] }
+    const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
 
     // Get query
-    const query = useQuery(req) as any as GithubReleasesQuery
+    const query = useQuery(req) as GithubReleasesQuery
+
+    // Merge query in base config
+    const githubConfig = overrideConfig(moduleConfig, query)
+
+    if (!githubConfig.owner || !githubConfig.repo || !githubConfig.api) { return [] }
 
     // Fetches releases from GitHub
-    let releases = (await fetchReleases(query, config.releases)) as GithubRawRelease[]
+    let releases = (await fetchReleases(query, githubConfig)) as GithubRawRelease[]
 
     if (!releases) { return }
 
     // Parse release notes when `parse` option is enabled and `@nuxt/content` is installed.
-    if (config?.releases?.parse) {
-      releases = await Promise.all(releases.map(parseRelease))
+    if (moduleConfig.parseContents) {
+      releases = await Promise.all(releases.map(release => parseRelease(release, githubConfig)))
     }
 
     // Sort DESC by release version or date

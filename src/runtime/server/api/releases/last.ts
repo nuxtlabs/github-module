@@ -1,5 +1,8 @@
-import { fetchReleases, parseRelease } from '../../utils/queries'
-import type { GithubRawRelease } from '../../../../module'
+import { useQuery } from 'h3'
+import { fetchReleases, overrideConfig, parseRelease } from '../../utils/queries'
+import type { ModuleOptions } from '../../../../module'
+import { GithubRawRelease, GithubRepositoryOptions } from '../../../types'
+// @ts-ignore
 import * as imports from '#imports'
 
 let handler
@@ -14,16 +17,22 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default handler(
-  async () => {
-    const config = imports.useRuntimeConfig().github
+  async ({ req }) => {
+    const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
 
-    if (!config.releases) { return [] }
+    // Get query
+    const query = useQuery(req) as GithubRepositoryOptions
+
+    // Merge query in base config
+    const githubConfig = overrideConfig(moduleConfig, query)
+
+    if (!githubConfig.owner || !githubConfig.repo || !githubConfig.api) { return [] }
 
     // Fetches releases from GitHub
-    let release = await fetchReleases({ last: true }, config.releases)
+    let release = await fetchReleases({ last: true }, githubConfig)
 
-    if (release && config?.releases?.parse) {
-      release = await parseRelease(release as GithubRawRelease)
+    if (release && moduleConfig.parseContents) {
+      release = await parseRelease(release as GithubRawRelease, githubConfig)
     }
 
     return release

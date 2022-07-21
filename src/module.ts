@@ -1,94 +1,36 @@
 import { defu } from 'defu'
-import consola from 'consola'
 import { addAutoImport, addComponent, createResolver, defineNuxtModule, resolveModule } from '@nuxt/kit'
+import type { GithubRepositoryOptions } from './runtime/types'
 
-export interface GithubRepositoryOptions {
+export interface ModuleOptions extends GithubRepositoryOptions {
   owner?: string
   branch?: string
   repo?: string
   api?: string
   token?: string
-}
-
-export interface GithubReleasesOptions extends GithubRepositoryOptions {
+  remarkPlugin?: boolean
+  releases?: boolean
+  contributors?: boolean
+  maxContributors?: number
   /**
-   * Parse release notes markdown and return AST tree
+   * Parse contents (releases content, readme) Markdown and return AST tree.
    *
    * Note: This option is only available when you have `@nuxt/content` installed in your project.
    *
    * @default true
    */
-  parse?: boolean
-}
-
-export interface GithubContributorsOptions extends GithubRepositoryOptions {
-  max: number
-}
-
-export interface GithubContributorsQuery {
-  source: string
-  max: string | number
-}
-
-export interface GithubReleasesQuery extends GithubRepositoryOptions {
-  per_page?: string
-  page?: string
-  last?: boolean
-  tag?: string
-}
-
-export interface GithubRawRelease {
-  name: string
-  body: string
-  v: number
-  tag_name: string
-  date: number
-  url: string
-  tarball: string
-  zipball: string
-  prerelease: boolean
-  reactions: Array<any>
-  author: {
-    name: string
-    url: string
-    avatar: string
-  }
-}
-
-export interface GithubRawContributors {
-  avatar_url: string
-  login: string
-  name: string
-}
-
-export interface ModuleOptions extends GithubRepositoryOptions {
-  remarkPlugin: boolean
-  contributors: false | GithubContributorsOptions
-  releases: false | GithubReleasesOptions
-}
-
-export interface ModulePublicRuntimeConfig extends GithubRepositoryOptions {
-  releases?: {
-    parse?: boolean
-  } & Partial<GithubRepositoryOptions>
-  contributors: {
-    max?: number | false
-  } & Partial<GithubRepositoryOptions>
-}
-
-// Non-reactive data taken from initial boot
-export interface ModulePrivateRuntimeConfig {
+  parseContents?: boolean
 }
 
 declare module '@nuxt/schema' {
   interface PublicRuntimeConfig {
     // @ts-ignore
-    github?: ModulePublicRuntimeConfig;
+    github?: ModuleOptions;
   }
 
   interface RuntimeConfig {
     // @ts-ignore
-    github?: ModulePrivateRuntimeConfig;
+    github?: ModuleOptions;
   }
 }
 
@@ -104,86 +46,40 @@ export default defineNuxtModule<ModuleOptions>({
     branch: 'main',
     api: 'https://api.github.com',
     remarkPlugin: true,
-    contributors: {
-      max: 100
-    },
-    releases: {
-      parse: true
-    }
+    releases: true,
+    contributors: true,
+    maxContributors: 100,
+    parseContents: true
   },
   setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
     const runtimeDir = resolve('./runtime')
 
-    if (!options?.repo) {
-      consola.warn('GitHub repository is not defined.')
-      consola.warn('If you want to use GitHub module you should probably fill `github.repo` option in `nuxt.config.js`.')
-    }
-
-    if (!options?.owner) {
+    if (!options.owner) {
       // Check if we can split repo name into owner/repo
-      if (options?.repo && options?.repo.includes('/')) {
+      if (options.repo && options.repo.includes('/')) {
         const [owner, repo] = options.repo.split('/')
         options.owner = owner
         options.repo = repo
-      } else {
-        consola.warn('GitHub repository owner is not defined.')
-        consola.warn('If you want to use GitHub module you should fill `github.owner` option in `nuxt.config.js`.')
       }
-    }
-
-    const repositoryOptions = (source: 'root' | 'contributors' | 'releases', withToken = true) => {
-      const target = (source === 'root' ? options : options[source]) as GithubRepositoryOptions | false
-
-      if (target === false) { return target }
-
-      const { owner, repo, api, token, branch } = target
-
-      const repositoryOptions: GithubRepositoryOptions = {
-        api: api || options?.api || process.env.GITHUB_OWNER,
-        owner: owner || options?.owner || process.env.GITHUB_OWNER,
-        branch: branch || options?.branch || process.env.GITHUB_BRANCH,
-        repo: repo || options?.repo || process.env.GITHUB_REPO,
-        token: undefined
-      }
-
-      if (withToken) {
-        repositoryOptions.token = token || options?.token || process.env.GITHUB_TOKEN
-      }
-
-      return repositoryOptions
     }
 
     // @ts-ignore
     if (!nuxt.options.runtimeConfig.public) { nuxt.options.runtimeConfig.public = {} }
 
-    nuxt.options.runtimeConfig.public.github = {
-      ...repositoryOptions('root', false),
-      // @ts-ignore
-      releases: {
-        ...repositoryOptions('releases', false),
-        parse: options.releases === false ? false : options.releases.parse
-      },
-      contributors: {
-        ...repositoryOptions('contributors', false),
-        // @ts-ignore
-        max: options.contributors === false ? false : options.contributors.max
-      }
+    const config = {
+      api: options.api || process.env.GITHUB_OWNER,
+      owner: options.owner || process.env.GITHUB_OWNER,
+      branch: options.branch || process.env.GITHUB_BRANCH,
+      repo: options.repo || process.env.GITHUB_REPO,
+      token: options.token || process.env.GITHUB_TOKEN,
+      parseContents: options.parseContents,
+      maxContributors: options.maxContributors
     }
 
-    nuxt.options.runtimeConfig.github = {
-      ...repositoryOptions('root'),
-      // @ts-ignore
-      releases: {
-        ...repositoryOptions('releases'),
-        parse: options.releases === false ? false : options.releases.parse
-      },
-      contributors: {
-        ...repositoryOptions('contributors'),
-        // @ts-ignore
-        max: options.contributors === false ? false : options.contributors.max
-      }
-    }
+    // Public runtime config
+    nuxt.options.runtimeConfig.public.github = config
+    nuxt.options.runtimeConfig.github = config
 
     // Autolink issue/PR/commit links using `remark-github` plugin
     if (options.remarkPlugin) {
@@ -207,6 +103,12 @@ export default defineNuxtModule<ModuleOptions>({
       handler: resolveModule('./server/api/repository', { paths: runtimeDir })
     })
 
+    // Setup readme file API
+    nitroConfig.handlers.push({
+      route: '/api/_github/readme',
+      handler: resolveModule('./server/api/readme', { paths: runtimeDir })
+    })
+
     // Repository component
     addComponent({
       name: 'GithubRepository',
@@ -221,8 +123,15 @@ export default defineNuxtModule<ModuleOptions>({
       global: true
     })
 
+    // GithubReadme component
+    addComponent({
+      name: 'GithubReadme',
+      filePath: resolveModule('./components/GithubReadme', { paths: runtimeDir }),
+      global: true
+    })
+
     // Setup releases API
-    if (options.releases !== false) {
+    if (options.releases) {
       // Last release (pre-render friendly)
       //
       // Have to use `last-release` instead of `release/last` otherwise pre-rendering will throw
@@ -254,7 +163,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     // Setup contributors API
-    if (options.contributors !== false) {
+    if (options.contributors) {
       nitroConfig.handlers.push({
         route: '/api/_github/contributors',
         handler: resolveModule('./server/api/contributors', { paths: runtimeDir })

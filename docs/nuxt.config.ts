@@ -2,7 +2,7 @@ import { defineNuxtConfig } from 'nuxt'
 
 export default defineNuxtConfig({
   extends: [
-    '@nuxt-themes/docus'
+    '../node_modules/@nuxt-themes/docus'
   ],
   modules: [
     '../src/module.ts'

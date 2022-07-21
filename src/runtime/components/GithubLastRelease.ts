@@ -1,13 +1,22 @@
-import { defineComponent, useSlots } from 'vue'
+import { defineComponent, useSlots, PropType } from 'vue'
+import { hash } from 'ohash'
 import { useGithub } from '../composables/useGithub'
+import { GithubRepositoryOptions } from '../types'
 // @ts-ignore
 import { useAsyncData } from '#imports'
 
 export default defineComponent({
-  async setup () {
+  props: {
+    query: {
+      type: Object as PropType<GithubRepositoryOptions>,
+      required: false,
+      default: () => ({})
+    }
+  },
+  async setup (props) {
     const { fetchLastRelease } = useGithub()
 
-    const { data: release, refresh, pending } = await useAsyncData('github-last-releases-component', () => fetchLastRelease())
+    const { data: release, refresh, pending } = await useAsyncData(`github-last-release-${hash(props.query)}`, () => fetchLastRelease(props.query))
 
     return {
       release,

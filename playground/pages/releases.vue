@@ -1,24 +1,34 @@
+<script setup lang="ts">
+const { owner, repo } = useRuntimeConfig().github
+
+const qOwner = ref('nuxt-community')
+const qRepo = ref('supabase-module')
+</script>
+
 <template>
   <div>
     <GithubReleases v-slot="{ releases }">
-      <div v-for="release in releases" :key="release.name">
-        <ProseH2 :id="release.name">
-          {{ release.name }}
-        </ProseH2>
+      Fetch releases form config: {{ owner }} / {{ repo }}
+      <div>
+        <span v-for="release in releases" :key="release.name">
+          {{ release.name }} /
+        </span>
+      </div>
+    </GithubReleases>
 
-        <p>Version: {{ release.v }}</p>
+    <br>
 
-        <p>URL: {{ release.url }}</p>
-
-        <p>Zipball: {{ release.zipall }}</p>
-
-        <p>Tarball: {{ release.tarball }}</p>
-
-        <p>Is prerelease ?: {{ release.prerelease }}</p>
-
-        <p>Reactions: {{ release.reactions }}</p>
-
-        <p>Author: {{ release.author }}</p>
+    <GithubReleases v-slot="{ releases, refresh }" :query="{ owner: qOwner, repo: qRepo }">
+      Fetch releases from query:
+      <input v-model="qOwner" style="margin-left: 1rem;" type="text"> /
+      <input v-model="qRepo" type="text">
+      <button style="margin-left: 1rem;" @click="refresh">
+        Search
+      </button>
+      <div>
+        <span v-for="release in releases" :key="release.name">
+          {{ release.name }} /
+        </span>
       </div>
     </GithubReleases>
   </div>

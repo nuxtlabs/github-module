@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+
 const file = ref('package.json')
 </script>
 
 <template>
   <div>
-    <GithubFileContributors v-slot="{ contributors, refresh }" :source="file">
-      <input v-model="file" style="margin-bottom: 2rem" type="text" @input="refresh">
+    File contributors (using config):
+    <GithubFileContributors v-slot="{ contributors, refresh }" :query="{ source: file }">
+      <input v-model="file" type="text" @input="refresh">
 
       <div v-for="contributor in contributors" :key="contributor.login">
         <div :id="contributor.login">

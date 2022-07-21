@@ -1,6 +1,6 @@
 <template>
   <GithubLastRelease v-slot="{ release }">
-    <div class="py-4">
+    <div v-if="release?.name" class="py-4">
       <ProseH2 :id="release.name" class="!mt-0">
         {{ release.name }}
       </ProseH2>

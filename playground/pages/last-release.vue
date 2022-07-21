@@ -1,6 +1,11 @@
+<script setup lang="ts">
+const { owner, repo } = useRuntimeConfig().github
+</script>
+
 <template>
   <div>
     <GithubLastRelease v-slot="{ release }">
+      Fetch last release from config: {{ owner }} / {{ repo }}
       <div v-if="release">
         <ProseH2 :id="release.name || '#'">
           Last Release: {{ release.name }}
