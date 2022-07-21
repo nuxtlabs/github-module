@@ -1,6 +1,6 @@
 {
   "name": "@nuxtlabs/github-module",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "license": "MIT",
   "private": false,
   "type": "module",
@@ -47,7 +47,9 @@
   },
   "release-it": {
     "hooks": {
-      "before:init": ["yarn build"]
+      "before:init": [
+        "yarn build"
+      ]
     },
     "npm": {
       "access": "public"
