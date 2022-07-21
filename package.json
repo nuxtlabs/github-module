@@ -46,6 +46,9 @@
     "vitest": "^0.18.1"
   },
   "release-it": {
+    "npm": {
+      "access": "public"
+    },
     "git": {
       "commitMessage": "chore: release v${version}"
     },
