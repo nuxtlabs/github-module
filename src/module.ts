@@ -8,6 +8,7 @@ export interface ModuleOptions extends GithubRepositoryOptions {
   repo?: string
   api?: string
   token?: string
+  disableCache?: boolean
   remarkPlugin?: boolean
   releases?: boolean
   contributors?: boolean
@@ -46,6 +47,7 @@ export default defineNuxtModule<ModuleOptions>({
     branch: 'main',
     api: 'https://api.github.com',
     remarkPlugin: true,
+    disableCache: false,
     releases: true,
     contributors: true,
     maxContributors: 100,
@@ -73,6 +75,7 @@ export default defineNuxtModule<ModuleOptions>({
       branch: options.branch || process.env.GITHUB_BRANCH,
       repo: options.repo || process.env.GITHUB_REPO,
       token: options.token || process.env.GITHUB_TOKEN,
+      disableCache: options.disableCache,
       parseContents: options.parseContents,
       maxContributors: options.maxContributors
     }

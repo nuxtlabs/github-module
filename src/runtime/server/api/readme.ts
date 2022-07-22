@@ -7,8 +7,10 @@ import { parseContent } from '#content/server'
 // @ts-ignore
 import * as imports from '#imports'
 
+const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
+
 let handler
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
   // @ts-ignore
   // eslint-disable-next-line import/namespace
   handler = imports.defineEventHandler
@@ -20,8 +22,6 @@ if (process.env.NODE_ENV === 'development') {
 
 export default handler(
   async ({ req }) => {
-    const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
-
     // Get query
     const query = useQuery(req) as GithubRepositoryOptions
 
