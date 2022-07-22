@@ -15,6 +15,10 @@ const nav = [
     path: '/releases'
   },
   {
+    name: 'Release by tag',
+    path: '/release'
+  },
+  {
     name: 'Last Release',
     path: '/last-release'
   },

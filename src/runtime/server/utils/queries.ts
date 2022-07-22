@@ -4,7 +4,7 @@ import { defu } from 'defu'
 import type {
   ModuleOptions
 } from '../../../module'
-import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
+import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributor, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
 // @ts-ignore
 import { parseContent } from '#content/server'
 
@@ -106,7 +106,7 @@ export async function fetchRepositoryContributors ({ max }: Partial<GithubContri
 
   url = withQuery(url, { max } as QueryObject)
 
-  const contributors = await $fetch<Array<GithubRawContributors>>(url, {
+  const contributors = await $fetch<Array<GithubRawContributor>>(url, {
     headers: {
       Authorization: token ? `token ${token}` : undefined
     }
@@ -221,9 +221,7 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
 
   if (!rawReleases) { return last ? {} : [] }
 
-  const releases = last ? normalizeRelease(rawReleases) : rawReleases.filter((r: any) => !r.draft).map(normalizeRelease)
-
-  return releases
+  return (last || tag) ? normalizeRelease(rawReleases) : rawReleases.filter((r: any) => !r.draft).map(normalizeRelease)
 }
 
 export async function fetchReadme ({ api, owner, repo, token }: GithubRepositoryOptions) {

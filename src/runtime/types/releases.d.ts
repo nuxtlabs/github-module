@@ -1,10 +1,13 @@
 import { GithubRepositoryOptions } from '.'
 
-export interface GithubReleasesQuery extends GithubRepositoryOptions {
+export interface GithubReleaseQuery extends GithubRepositoryOptions {
+  tag?: string
+}
+
+export interface GithubReleasesQuery extends GithubReleaseQuery {
   per_page?: string
   page?: string
   last?: boolean
-  tag?: string
 }
 
 export interface GithubRawRelease {

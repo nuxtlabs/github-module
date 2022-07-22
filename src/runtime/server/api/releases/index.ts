@@ -29,19 +29,21 @@ export default handler(
     if (!githubConfig.owner || !githubConfig.repo || !githubConfig.api) { return [] }
 
     // Fetches releases from GitHub
-    let releases = (await fetchReleases(query, githubConfig)) as GithubRawRelease[]
+    let releases = (await fetchReleases(query, githubConfig)) as (GithubRawRelease | GithubRawRelease[])
 
     if (!releases) { return }
 
     // Parse release notes when `parse` option is enabled and `@nuxt/content` is installed.
     if (moduleConfig.parseContents) {
-      releases = await Promise.all(releases.map(release => parseRelease(release, githubConfig)))
+      if (Array.isArray(releases)) {
+        releases = await Promise.all(releases.map(release => parseRelease(release, githubConfig)))
+      } else {
+        return await parseRelease(releases, githubConfig)
+      }
     }
 
     // Sort DESC by release version or date
-    releases = (releases || []).sort((a, b) => (a.v !== b.v ? b.v - a.v : a.date - b.date))
-
-    return releases
+    return (releases as GithubRawRelease[] || []).sort((a, b) => (a.v !== b.v ? b.v - a.v : a.date - b.date))
   },
   {
     maxAge: 60 // cache for one minute

@@ -5,7 +5,7 @@ export interface GithubContributorsQuery extends GithubRepositoryOptions {
   max?: string | number
 }
 
-export interface GithubRawContributors {
+export interface GithubRawContributor {
   avatar_url: string
   login: string
   name: string
