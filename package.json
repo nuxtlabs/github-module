@@ -24,7 +24,8 @@
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "lint": "eslint --ext .js,.ts,.vue .",
     "test": "vitest",
-    "release": "release-it"
+    "release": "release-it",
+    "prepare": "yarn dev:prepare"
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.6",
