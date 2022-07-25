@@ -43,7 +43,7 @@ export default handler(
     }
 
     // Sort DESC by release version or date
-    return (releases as GithubRawRelease[] || []).sort((a, b) => (a.v !== b.v ? b.v - a.v : a.date - b.date))
+    return (releases as GithubRawRelease[] || []).sort((a, b) => (a.v !== b.v ? b.v - a.v : a.date - b.date)).filter(Boolean)
   },
   {
     maxAge: 60 // cache for one minute

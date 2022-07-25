@@ -57,23 +57,32 @@ export function githubGraphqlQuery<T = any> (query: string, options: Partial<Mod
 }
 
 export const parseRelease = async (release: GithubRawRelease, githubConfig: GithubRepositoryOptions) => {
-  return {
-    ...release,
-    // Parse release notes when `@nuxt/content` is installed.
-    ...(
-      typeof parseContent === 'function' && release?.body && release?.name
-        ? await parseContent(`github:${release.name}.md`, release.body, {
-          markdown: {
-            remarkPlugins: {
-              'remark-github': {
-                repository: `${githubConfig.owner}/${githubConfig.repo}`
+  let parsedRelease
+  try {
+    parsedRelease = {
+      ...release,
+      // Parse release notes when `@nuxt/content` is installed.
+      ...(
+        typeof parseContent === 'function' && release?.body && release?.name
+          ? await parseContent(`github:${release.name}.md`, release.body, {
+            markdown: {
+              remarkPlugins: {
+                'remark-github': {
+                  repository: `${githubConfig.owner}/${githubConfig.repo}`
+                }
               }
             }
-          }
-        })
-        : {}
-    )
+          })
+          : {}
+      )
+    }
+  } catch (_err) {
+    // eslint-disable-next-line no-console
+    console.warn(`Cannot parse release ${release?.name} [${_err.response?.status || 500}]`)
+    return
   }
+
+  return parsedRelease
 }
 
 export function overrideConfig (config: ModuleOptions, query: GithubRepositoryOptions): GithubRepositoryOptions {
