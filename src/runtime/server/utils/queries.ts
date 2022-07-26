@@ -4,7 +4,7 @@ import { defu } from 'defu'
 import type {
   ModuleOptions
 } from '../../../module'
-import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributors, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
+import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributor, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
 // @ts-ignore
 import { parseContent } from '#content/server'
 
@@ -57,23 +57,32 @@ export function githubGraphqlQuery<T = any> (query: string, options: Partial<Mod
 }
 
 export const parseRelease = async (release: GithubRawRelease, githubConfig: GithubRepositoryOptions) => {
-  return {
-    ...release,
-    // Parse release notes when `@nuxt/content` is installed.
-    ...(
-      typeof parseContent === 'function' && release?.body && release?.name
-        ? await parseContent(`github:${release.name}.md`, release.body, {
-          markdown: {
-            remarkPlugins: {
-              'remark-github': {
-                repository: `${githubConfig.owner}/${githubConfig.repo}`
+  let parsedRelease
+  try {
+    parsedRelease = {
+      ...release,
+      // Parse release notes when `@nuxt/content` is installed.
+      ...(
+        typeof parseContent === 'function' && release?.body && release?.name
+          ? await parseContent(`github:${release.name}.md`, release.body, {
+            markdown: {
+              remarkPlugins: {
+                'remark-github': {
+                  repository: `${githubConfig.owner}/${githubConfig.repo}`
+                }
               }
             }
-          }
-        })
-        : {}
-    )
+          })
+          : {}
+      )
+    }
+  } catch (_err) {
+    // eslint-disable-next-line no-console
+    console.warn(`Cannot parse release ${release?.name} [${_err.response?.status || 500}]`)
+    return
   }
+
+  return parsedRelease
 }
 
 export function overrideConfig (config: ModuleOptions, query: GithubRepositoryOptions): GithubRepositoryOptions {
@@ -106,7 +115,7 @@ export async function fetchRepositoryContributors ({ max }: Partial<GithubContri
 
   url = withQuery(url, { max } as QueryObject)
 
-  const contributors = await $fetch<Array<GithubRawContributors>>(url, {
+  const contributors = await $fetch<Array<GithubRawContributor>>(url, {
     headers: {
       Authorization: token ? `token ${token}` : undefined
     }
@@ -221,9 +230,7 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
 
   if (!rawReleases) { return last ? {} : [] }
 
-  const releases = last ? normalizeRelease(rawReleases) : rawReleases.filter((r: any) => !r.draft).map(normalizeRelease)
-
-  return releases
+  return (last || tag) ? normalizeRelease(rawReleases) : rawReleases.filter((r: any) => !r.draft).map(normalizeRelease)
 }
 
 export async function fetchReadme ({ api, owner, repo, token }: GithubRepositoryOptions) {
