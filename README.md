@@ -4,16 +4,16 @@
 
 ## Setup
 
-Install `@docus/github` in your project:
+Install `@nuxtlabs/github-module` in your project:
 
 ```bash
 # Using Yarn
-yarn add --dev @docus/github
+yarn add --dev @nuxtlabs/github-module
 # Using NPM
-npm install --save-dev @docus/github
+npm install --save-dev @nuxtlabs/github-module
 ```
 
-Then, add `@docus/github` to the `modules` section of your `nuxt.config.ts`:
+Then, add `@nuxtlabs/github-module` to the `modules` section of your `nuxt.config.ts`:
 
 ```ts
 import { defineNuxtConfig } from 'nuxt'
@@ -21,7 +21,7 @@ import { defineNuxtConfig } from 'nuxt'
 export default defineNuxtConfig({
   modules: [
     '@nuxt/content', // Required
-    '@docus/github'
+    '@nuxtlabs/github-module'
   ],
   github: {
     repo: 'nuxt/framework' // Or use GITHUB_REPO in .env
