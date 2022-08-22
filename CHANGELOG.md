@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.4.7](https://github.com/nuxtlabs/github-module/compare/v1.4.6...v1.4.7) (2022-08-22)
+
+
+### Features
+
+* **GithubLink:** handle contents from remote github source ([#32](https://github.com/nuxtlabs/github-module/issues/32)) ([11f88e7](https://github.com/nuxtlabs/github-module/commit/11f88e7548c96bc2040a6614f3795abe5255c4df))
+
+
+### Bug Fixes
+
+* add `remark-github` plugin to bundle ([#34](https://github.com/nuxtlabs/github-module/issues/34)) ([9d0236b](https://github.com/nuxtlabs/github-module/commit/9d0236b4de261dc87778afb9ddb13ddd303a4c4d))
+
 ### [1.2.4](https://github.com/nuxtlabs/github-module/compare/v1.2.3...v1.2.4) (2022-05-05)
 
 ### [1.2.3](https://github.com/nuxtlabs/github-module/compare/v1.2.2...v1.2.3) (2022-05-05)
