@@ -1,5 +1,4 @@
-import { useQuery } from 'h3'
-import { fetchRepository, overrideConfig } from '../utils/queries'
+import { decodeParams, fetchRepository, overrideConfig } from '../utils/queries'
 import { ModuleOptions } from '../../../module'
 import { GithubRepository, GithubRepositoryOptions } from '../../types'
 // @ts-ignore
@@ -20,9 +19,9 @@ if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
 
 // eslint-disable-next-line import/namespace
 export default handler(
-  async ({ req }) => {
+  async (event) => {
     // Get query
-    const query = useQuery(req) as GithubRepositoryOptions
+    const query = decodeParams(event.context.params.query) as GithubRepositoryOptions
 
     // Merge query in module config
     const githubConfig = overrideConfig(moduleConfig, query)

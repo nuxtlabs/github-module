@@ -8,6 +8,15 @@ import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributor, Github
 // @ts-ignore
 import { parseContent } from '#content/server'
 
+export function decodeParams (params: string = '') {
+  const result = {}
+  for (const param of params.split(',')) {
+    const [key, ...value] = param.split('_')
+    result[key] = value.join('_')
+  }
+  return result
+}
+
 function isBot (user) {
   return user.login.includes('[bot]') || user.login.includes('-bot') || user.login.includes('.bot')
 }
