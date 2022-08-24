@@ -1,5 +1,6 @@
 import { joinURL, withQuery, QueryObject } from 'ufo'
 import { graphql } from '@octokit/graphql'
+import remarkGithub from 'remark-github'
 import { defu } from 'defu'
 import type {
   ModuleOptions
@@ -77,6 +78,7 @@ export const parseRelease = async (release: GithubRawRelease, githubConfig: Gith
             markdown: {
               remarkPlugins: {
                 'remark-github': {
+                  instance: remarkGithub,
                   repository: `${githubConfig.owner}/${githubConfig.repo}`
                 }
               }
