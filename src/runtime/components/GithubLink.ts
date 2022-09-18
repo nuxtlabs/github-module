@@ -80,10 +80,8 @@ export default defineComponent({
       throw new Error('If you want to use `GithubLink` component, you must specify: `owner`, `repo` and `branch`.')
     }
 
-    let repo = props.repo
-    let owner = props.owner
-    let branch = props.branch
-    let contentDir = props.contentDir
+    // eslint-disable-next-line vue/no-setup-props-destructure
+    let { repo, owner, branch, contentDir } = props
     let prefix = ''
     const { sources } = useRuntimeConfig().content
     let source
