@@ -1,5 +1,4 @@
-import { useQuery } from 'h3'
-import { fetchReleases, overrideConfig, parseRelease } from '../../utils/queries'
+import { decodeParams, fetchReleases, overrideConfig, parseRelease } from '../../utils/queries'
 import type { ModuleOptions } from '../../../../module'
 import { GithubRawRelease, GithubReleasesQuery } from '../../../types'
 // @ts-ignore
@@ -19,9 +18,9 @@ if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
 }
 
 export default handler(
-  async ({ req }) => {
+  async (event) => {
     // Get query
-    const query = useQuery(req) as GithubReleasesQuery
+    const query = decodeParams(event.context.params.query) as GithubReleasesQuery
 
     // Merge query in base config
     const githubConfig = overrideConfig(moduleConfig, query)

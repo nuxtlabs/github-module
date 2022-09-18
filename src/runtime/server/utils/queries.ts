@@ -1,5 +1,6 @@
 import { joinURL, withQuery, QueryObject } from 'ufo'
 import { graphql } from '@octokit/graphql'
+import remarkGithub from 'remark-github'
 import { defu } from 'defu'
 import type {
   ModuleOptions
@@ -7,6 +8,15 @@ import type {
 import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributor, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
 // @ts-ignore
 import { parseContent } from '#content/server'
+
+export function decodeParams (params: string = '') {
+  const result = {}
+  for (const param of params.split(',')) {
+    const [key, ...value] = param.split('_')
+    result[key] = value.join('_')
+  }
+  return result
+}
 
 function isBot (user) {
   return user.login.includes('[bot]') || user.login.includes('-bot') || user.login.includes('.bot')
@@ -68,6 +78,7 @@ export const parseRelease = async (release: GithubRawRelease, githubConfig: Gith
             markdown: {
               remarkPlugins: {
                 'remark-github': {
+                  instance: remarkGithub,
                   repository: `${githubConfig.owner}/${githubConfig.repo}`
                 }
               }

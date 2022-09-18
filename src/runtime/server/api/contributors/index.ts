@@ -1,6 +1,5 @@
-import { useQuery } from 'h3'
 import type { ModuleOptions } from '../../../../module'
-import { fetchRepositoryContributors, overrideConfig } from '../../utils/queries'
+import { decodeParams, fetchRepositoryContributors, overrideConfig } from '../../utils/queries'
 import { GithubContributorsQuery } from '../../../types'
 // @ts-ignore
 import * as imports from '#imports'
@@ -20,9 +19,9 @@ if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
 
 // eslint-disable-next-line import/namespace
 export default handler(
-  async ({ req }) => {
+  async (event) => {
     // Get query
-    const query = useQuery(req) as GithubContributorsQuery
+    const query = decodeParams(event.context.params.query) as GithubContributorsQuery
 
     // Merge query in module config
     const githubConfig = overrideConfig(moduleConfig, query)
