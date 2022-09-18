@@ -80,27 +80,35 @@ export default defineComponent({
       throw new Error('If you want to use `GithubLink` component, you must specify: `owner`, `repo` and `branch`.')
     }
 
-    // eslint-disable-next-line vue/no-setup-props-destructure
-    let { repo, owner, branch, contentDir } = props
-    let prefix = ''
-    const { sources } = useRuntimeConfig().content
-    let source
-    for (const key in Object.keys(sources)) {
-      if (props.page._id.startsWith(key)) {
-        source = sources[key]
-        break
+    const source = computed(() => {
+      let { repo, owner, branch, contentDir } = props
+      let prefix = ''
+
+      // Resolve source from content sources
+      if (useRuntimeConfig()?.public?.content) {
+        let source
+        const { sources } = useRuntimeConfig().public.content
+
+        for (const key in sources || []) {
+          if (props.page._id.startsWith(key)) {
+            source = sources[key]
+            break
+          }
+        }
+
+        if (source?.driver === 'github') {
+          repo = source.repo || props.repo || ''
+          owner = source.owner || props.owner || ''
+          branch = source.branch || props.branch || 'main'
+          contentDir = source.dir || props.contentDir || ''
+          prefix = source.prefix || ''
+        }
       }
-    }
 
-    if (source?.driver === 'github') {
-      repo = source.repo
-      owner = ''
-      branch = source.branch || 'main'
-      contentDir = source.dir || ''
-      prefix = source.prefix || ''
-    }
+      return { repo, owner, branch, contentDir, prefix }
+    })
 
-    const base = computed(() => joinURL('https://github.com', `${owner}/${repo}`))
+    const base = computed(() => joinURL('https://github.com', `${source.value.owner}/${source.value.repo}`))
 
     const path = computed(() => {
       const dirParts: string[] = []
@@ -109,10 +117,10 @@ export default defineComponent({
       // Create the URL from a document data.
       if (props?.page?._path) {
         // Use content dir
-        if (contentDir) { dirParts.push(contentDir) }
+        if (source.value.contentDir) { dirParts.push(source.value.contentDir) }
 
         // Get page file from page data
-        dirParts.push(props.page._file.substring(prefix.length))
+        dirParts.push(props.page._file.substring(source.value.prefix.length))
 
         return dirParts
       }
@@ -138,7 +146,7 @@ export default defineComponent({
 
       if (props.edit) { parts.push('edit') } else { parts.push('tree') }
 
-      parts.push(branch, ...path.value)
+      parts.push(source.value.branch, ...path.value)
 
       return parts.filter(Boolean).join('/')
     })

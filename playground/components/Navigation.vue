@@ -29,6 +29,10 @@ const nav = [
   {
     name: 'File Contributors',
     path: '/file-contributors'
+  },
+  {
+    name: 'Github Link',
+    path: '/github-link'
   }
 ]
 </script>
