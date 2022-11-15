@@ -2,6 +2,7 @@ import { decodeParams, fetchReleases, overrideConfig, parseRelease } from '../..
 import type { ModuleOptions } from '../../../../module'
 import { GithubRawRelease, GithubReleasesQuery } from '../../../types'
 // @ts-ignore
+import { addPrerenderPath } from '../../utils/prerender'
 import * as imports from '#imports'
 
 const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
@@ -19,6 +20,7 @@ if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
 
 export default handler(
   async (event) => {
+    addPrerenderPath(event)
     // Get query
     const query = decodeParams(event.context.params.query) as GithubReleasesQuery
 
@@ -26,7 +28,6 @@ export default handler(
     const githubConfig = overrideConfig(moduleConfig, query)
 
     if (!githubConfig.owner || !githubConfig.repo || !githubConfig.api) { return [] }
-
     // Fetches releases from GitHub
     let releases = (await fetchReleases(query, githubConfig)) as (GithubRawRelease | GithubRawRelease[])
 

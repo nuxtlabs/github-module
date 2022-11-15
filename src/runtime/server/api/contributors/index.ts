@@ -2,6 +2,7 @@ import type { ModuleOptions } from '../../../../module'
 import { decodeParams, fetchRepositoryContributors, overrideConfig } from '../../utils/queries'
 import { GithubContributorsQuery } from '../../../types'
 // @ts-ignore
+import { addPrerenderPath } from '../../utils/prerender'
 import * as imports from '#imports'
 
 const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
@@ -20,6 +21,7 @@ if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
 // eslint-disable-next-line import/namespace
 export default handler(
   async (event) => {
+    addPrerenderPath(event)
     // Get query
     const query = decodeParams(event.context.params.query) as GithubContributorsQuery
 

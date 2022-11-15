@@ -2,6 +2,7 @@ import { overrideConfig, fetchReadme, decodeParams } from '../utils/queries'
 import type { ModuleOptions } from '../../../module'
 import { GithubRepositoryOptions, GithubRepositoryReadme } from '../../types'
 // @ts-ignore
+import { addPrerenderPath } from '../utils/prerender'
 import { parseContent } from '#content/server'
 // @ts-ignore
 import * as imports from '#imports'
@@ -21,6 +22,7 @@ if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
 
 export default handler(
   async (event) => {
+    addPrerenderPath(event)
     // Get query
     const query = decodeParams(event.context.params.query) as GithubRepositoryOptions
 
