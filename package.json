@@ -16,7 +16,7 @@
     "dist"
   ],
   "scripts": {
-    "prepare": "nuxt-module-build && nuxi prepare playground",
+    "prepare": "nuxi prepare playground",
     "build": "nuxt-module-build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
@@ -24,6 +24,7 @@
     "build:docs": "nuxi generate docs",
     "lint": "eslint --ext .js,.ts,.vue .",
     "test": "vitest",
+    "prepack": "nuxt-module-build",
     "release": "release-it"
   },
   "dependencies": {
