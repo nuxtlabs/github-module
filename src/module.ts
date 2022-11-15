@@ -91,11 +91,6 @@ export default defineNuxtModule<ModuleOptions>({
         context.markdown.remarkPlugins = context.markdown.remarkPlugins || {}
         context.markdown.remarkPlugins['remark-github'] = { repository: `${options.owner}/${options.repo}` }
       })
-      // Add `remark-github` plugin to bundle
-      nuxt.hook('nitro:config', (nitroConfig) => {
-        nitroConfig.externals.traceInclude = nitroConfig.externals.traceInclude || []
-        nitroConfig.externals.traceInclude.push('node_modules/remark-github/index.js')
-      })
     }
 
     const nitroConfig = nuxt.options.nitro
