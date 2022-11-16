@@ -1,6 +1,6 @@
 {
   "name": "@nuxtlabs/github-module",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "license": "MIT",
   "private": false,
   "type": "module",
