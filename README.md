@@ -77,9 +77,11 @@ github: {
 
 ## Development
 
-1. Run `yarn prepare` to generate type stubs.
-2. Create a [personal access token](https://github.com/settings/tokens) on GitHub and add it into `playground/.env`
+1. Clone this repository
+2. Install dependencies using `yarn install` or `npm install`
+3. Generate type stubs using `yarn prepare` or `npm run prepare`
+4. In `playground/.env`, add your [personal access token](https://github.com/settings/tokens)
   ```env
   GITHUB_TOKEN='<your-personal-token>'
   ```
-3. Use `yarn dev` to start [playground](./playground) in development mode.
+5. Launch playground using `yarn dev` or `npm run dev`
