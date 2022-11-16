@@ -75,7 +75,7 @@ github: {
 
 ## Development
 
-1. Run `npm run dev:prepare` to generate type stubs.
+1. Run `npm run prepare` to generate type stubs.
 2. Create a [personal access token](https://github.com/settings/tokens) on GitHub and add it into `playground/.env`
   ```env
   GITHUB_TOKEN='<your-personal-token>'
