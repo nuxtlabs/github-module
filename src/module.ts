@@ -1,13 +1,8 @@
 import { defu } from 'defu'
-import { addAutoImport, addComponent, createResolver, defineNuxtModule, resolveModule } from '@nuxt/kit'
+import { addImports, addComponent, createResolver, defineNuxtModule, resolveModule } from '@nuxt/kit'
 import type { GithubRepositoryOptions } from './runtime/types'
 
 export interface ModuleOptions extends GithubRepositoryOptions {
-  owner?: string
-  branch?: string
-  repo?: string
-  api?: string
-  token?: string
   disableCache?: boolean
   remarkPlugin?: boolean
   releases?: boolean
@@ -202,7 +197,7 @@ export default defineNuxtModule<ModuleOptions>({
       })
     }
 
-    addAutoImport({
+    addImports({
       name: 'useGithub',
       from: resolveModule('./composables/useGithub', { paths: runtimeDir })
     })
