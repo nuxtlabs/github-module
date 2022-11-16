@@ -11,6 +11,8 @@ Install `@nuxtlabs/github-module` in your project:
 yarn add --dev @nuxtlabs/github-module
 # Using NPM
 npm install --save-dev @nuxtlabs/github-module
+# Using PNPM
+pnpm add --save-dev @nuxtlabs/github-module
 ```
 
 Then, add `@nuxtlabs/github-module` to the `modules` section of your `nuxt.config.ts`:
@@ -75,9 +77,9 @@ github: {
 
 ## Development
 
-1. Run `npm run prepare` to generate type stubs.
+1. Run `yarn prepare` to generate type stubs.
 2. Create a [personal access token](https://github.com/settings/tokens) on GitHub and add it into `playground/.env`
   ```env
   GITHUB_TOKEN='<your-personal-token>'
   ```
-3. Use `npm run dev` to start [playground](./playground) in development mode.
+3. Use `yarn dev` to start [playground](./playground) in development mode.
