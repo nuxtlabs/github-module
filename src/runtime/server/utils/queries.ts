@@ -11,6 +11,7 @@ import { parseContent } from '#content/server'
 
 export function decodeParams (params: string = '') {
   const result = {}
+  params = params.replace(/\.json$/, '')
   for (const param of params.split(':')) {
     const [key, ...value] = param.split('_')
     result[key] = value.join('_')
