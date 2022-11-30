@@ -33,7 +33,7 @@ export default handler(
     const readme = await fetchReadme(githubConfig) as GithubRepositoryReadme
 
     // Readme readable content
-    const content = Buffer.from(readme.content, 'base64').toString()
+    const content = Buffer.from(readme.content ?? '', 'base64').toString()
 
     // Parse contents with @nuxt/content if enabled
     if (moduleConfig.parseContents) {
