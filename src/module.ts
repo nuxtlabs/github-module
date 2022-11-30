@@ -83,8 +83,11 @@ export default defineNuxtModule<ModuleOptions>({
     if (options.remarkPlugin) {
       // @ts-ignore
       nuxt.hook('content:context', (context) => {
-        context.markdown.remarkPlugins = context.markdown.remarkPlugins || {}
-        context.markdown.remarkPlugins['remark-github'] = { repository: `${options.owner}/${options.repo}` }
+        context.markdown.remarkPlugins ??= {}
+
+        if (!Array.isArray(context.markdown.remarkPlugins)) {
+          context.markdown.remarkPlugins['remark-github'] = { repository: `${options.owner}/${options.repo}` }
+        }
       })
     }
 
