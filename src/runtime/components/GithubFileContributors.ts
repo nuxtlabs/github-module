@@ -18,10 +18,11 @@ export default defineComponent({
     const source = toRef(props.query, 'source')
 
     const { fetchFileContributors } = useGithub()
+    watch(source, () => {
+      if (refresh) { refresh() }
+    })
 
     const { data: contributors, refresh, pending } = await useAsyncData(`github-file-contributors-${hash(props.query)}`, () => fetchFileContributors(props.query))
-
-    watch(source, () => refresh())
 
     return {
       contributors,
