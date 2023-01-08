@@ -33,6 +33,10 @@ const nav = [
   {
     name: 'Github Link',
     path: '/github-link'
+  },
+  {
+    name: 'Commits',
+    path: '/commits'
   }
 ]
 </script>
