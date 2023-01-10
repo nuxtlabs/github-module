@@ -1,5 +1,5 @@
 import type { ParsedContent } from '@nuxt/content/dist/runtime/types'
-import type { GithubRepositoryOptions, GithubContributorsQuery, GithubReleasesQuery, GithubRepository, GithubRawRelease, GithubRawContributor, GithubReleaseQuery } from '../types'
+import type { GithubRepositoryOptions, GithubContributorsQuery, GithubReleasesQuery, GithubRepository, GithubRawRelease, GithubRawContributor, GithubReleaseQuery, GithubCommitsQuery } from '../types'
 import { useRequestEvent } from '#imports'
 
 export const useGithub = () => {
@@ -45,6 +45,12 @@ export const useGithub = () => {
     return $fetch(url, { responseType: 'json' })
   }
 
+  const fetchCommits = (query: GithubCommitsQuery): Promise<any> => {
+    const url = `/api/_github/commits/${encodeParams(query)}.json`
+    process.server && addPrerenderPath(url)
+    return $fetch(url, { responseType: 'json' })
+  }
+
   return {
     fetchRepository,
     fetchReleases,
@@ -52,7 +58,8 @@ export const useGithub = () => {
     fetchLastRelease,
     fetchContributors,
     fetchFileContributors,
-    fetchReadme
+    fetchReadme,
+    fetchCommits
   }
 }
 

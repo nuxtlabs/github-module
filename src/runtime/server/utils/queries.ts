@@ -5,11 +5,11 @@ import { defu } from 'defu'
 import type {
   ModuleOptions
 } from '../../../module'
-import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributor, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository } from '../../types'
+import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributor, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository, GithubCommitsQuery } from '../../types'
 // @ts-ignore
 import { parseContent } from '#content/server'
 
-export function decodeParams (params: string = '') {
+export function decodeParams (params = '') {
   const result = {}
   params = params.replace(/\.json$/, '')
   for (const param of params.split(':')) {
@@ -149,6 +149,57 @@ export async function fetchRepositoryContributors ({ max }: Partial<GithubContri
 
   // eslint-disable-next-line camelcase
   return contributors.map(({ avatar_url, login }) => ({ avatar_url, login }))
+}
+
+export async function fetchCommits ({ date, source }: Partial<Omit<GithubCommitsQuery, 'date'> & { date: Date }>, { owner, repo, branch, token }: GithubRepositoryOptions) {
+  const daysAgo = () => {
+    if (date) { return date.toISOString() }
+
+    const now = new Date()
+    now.setDate(now.getDate() - 30) // get from 30 days ago
+    return now.toISOString()
+  }
+
+  const path = source ? `path: "${source}",` : ''
+  const data = await githubGraphqlQuery(
+    `
+      query {
+        repository(owner: "${owner}", name: "${repo}") {
+          object(expression: "${branch}") {
+            ... on Commit {
+              history(since: "${daysAgo()}", ${path}) {
+                nodes {
+                  oid
+                  messageHeadlineHTML
+                  authors(first: ${5}) {
+                    nodes {
+                      user {
+                        name
+                        avatarUrl
+                        login
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    `, { token }
+  )
+
+  if (!data?.repository?.object?.history?.nodes) { return [] }
+
+  const commits = data.repository.object.history.nodes.map(node => ({
+    hash: node.oid,
+    message: node.messageHeadlineHTML,
+    authors: node.authors.nodes
+      .map(author => author.user)
+      .filter(user => user?.name && !isBot(user))
+  }))
+
+  return commits
 }
 
 export async function fetchFileContributors ({ source, max }: Partial<GithubContributorsQuery>, { owner, repo, branch, token }: GithubRepositoryOptions & { maxContributors?: number }) {

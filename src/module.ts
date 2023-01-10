@@ -200,6 +200,22 @@ export default defineNuxtModule<ModuleOptions>({
       })
     }
 
+    // Setup commits API
+    nitroConfig.handlers.push({
+      route: '/api/_github/commits',
+      handler: resolveModule('./server/api/commits', { paths: runtimeDir })
+    }, {
+      route: '/api/_github/commits/:query',
+      handler: resolveModule('./server/api/commits', { paths: runtimeDir })
+    })
+
+    // GithubCommits component
+    addComponent({
+      name: 'GithubCommits',
+      filePath: resolveModule('./components/GithubCommits', { paths: runtimeDir }),
+      global: true
+    })
+
     addImports({
       name: 'useGithub',
       from: resolveModule('./composables/useGithub', { paths: runtimeDir })
