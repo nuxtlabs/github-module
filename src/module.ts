@@ -76,8 +76,8 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     // Public runtime config
-    nuxt.options.runtimeConfig.public.github = config
-    nuxt.options.runtimeConfig.github = config
+    nuxt.options.runtimeConfig.public.github = defu(nuxt.options.runtimeConfig.public.github, config)
+    nuxt.options.runtimeConfig.github = defu(nuxt.options.runtimeConfig.github, config)
 
     // Autolink issue/PR/commit links using `remark-github` plugin
     if (options.remarkPlugin) {
