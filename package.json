@@ -49,7 +49,7 @@
   "release-it": {
     "hooks": {
       "before:init": [
-        "yarn build"
+        "npm run build"
       ]
     },
     "npm": {
