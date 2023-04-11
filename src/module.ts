@@ -21,12 +21,12 @@ export interface ModuleOptions extends GithubRepositoryOptions {
 declare module '@nuxt/schema' {
   interface PublicRuntimeConfig {
     // @ts-ignore
-    github?: ModuleOptions;
+    github?: ModuleOptions
   }
 
   interface RuntimeConfig {
     // @ts-ignore
-    github?: ModuleOptions;
+    github?: ModuleOptions
   }
 }
 
@@ -78,6 +78,8 @@ export default defineNuxtModule<ModuleOptions>({
     // Public runtime config
     // @ts-ignore
     nuxt.options.runtimeConfig.public.github = defu(nuxt.options.runtimeConfig.public.github, config)
+    // only used in server route
+    delete nuxt.options.runtimeConfig.public.github!.token
     // @ts-ignore
     nuxt.options.runtimeConfig.github = defu(nuxt.options.runtimeConfig.github, config)
 
