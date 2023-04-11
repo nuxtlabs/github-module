@@ -21,12 +21,12 @@ export interface ModuleOptions extends GithubRepositoryOptions {
 declare module '@nuxt/schema' {
   interface PublicRuntimeConfig {
     // @ts-ignore
-    github?: ModuleOptions
+    github?: ModuleOptions;
   }
 
   interface RuntimeConfig {
     // @ts-ignore
-    github?: ModuleOptions
+    github?: ModuleOptions;
   }
 }
 
