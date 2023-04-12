@@ -23,7 +23,7 @@
     "dev:docs": "nuxi dev docs",
     "build:docs": "nuxi generate docs",
     "lint": "eslint --ext .js,.ts,.vue .",
-    "test": "vitest",
+    "test": "vitest run",
     "prepack": "nuxt-module-build",
     "release": "release-it"
   },
