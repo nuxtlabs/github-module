@@ -1,58 +1,49 @@
+import { eventHandler } from 'h3'
+import type { H3Event } from 'h3'
 import { overrideConfig, fetchReadme, decodeParams } from '../utils/queries'
-import type { ModuleOptions } from '../../../module'
-import { GithubRepositoryOptions, GithubRepositoryReadme } from '../../types'
+import type { GithubRepositoryOptions, GithubRepositoryReadme } from '../../types'
 // @ts-ignore
-import { parseContent } from '#content/server'
-// @ts-ignore
-import * as imports from '#imports'
+import { useRuntimeConfig, cachedEventHandler } from '#imports'
 
-const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
+const moduleConfig = useRuntimeConfig().github || {}
 
-let handler
-if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
-  // @ts-ignore
-  // eslint-disable-next-line import/namespace
-  handler = imports.defineEventHandler
-} else {
-  // @ts-ignore
-  // eslint-disable-next-line import/namespace
-  handler = imports.defineCachedEventHandler
-}
+const handler: typeof cachedEventHandler = process.env.NODE_ENV === 'development' || moduleConfig.disableCache ? eventHandler : cachedEventHandler
 
-export default handler(
-  async (event) => {
-    // Get query
-    const query = decodeParams(event.context.params.query) as GithubRepositoryOptions
+export default handler(async (event: H3Event) => {
+  // Get query
+  const query = decodeParams(event.context.params?.query) as GithubRepositoryOptions
 
-    // Merge query in base config
-    const githubConfig = overrideConfig(moduleConfig, query)
+  // Merge query in base config
+  const githubConfig = overrideConfig(moduleConfig, query)
 
-    if (!githubConfig.owner || !githubConfig.repo || !githubConfig.api) { return [] }
+  if (!githubConfig.owner || !githubConfig.repo || !githubConfig.api) { return [] }
 
-    // Fetch readme from GitHub
-    const readme = await fetchReadme(githubConfig) as GithubRepositoryReadme
+  // Fetch readme from GitHub
+  const readme = await fetchReadme(githubConfig) as GithubRepositoryReadme
 
-    // Readme readable content
-    const content = Buffer.from(readme.content ?? '', 'base64').toString()
+  // Readme readable content
+  const content = Buffer.from(readme.content ?? '', 'base64').toString()
 
-    // Parse contents with @nuxt/content if enabled
-    if (moduleConfig.parseContents) {
-      // Return parsed content
-      return await parseContent(`${githubConfig.owner}:${githubConfig.repo}:readme.md`, content, {
-        markdown: {
-          remarkPlugins: {
+  // Parse contents with @nuxt/content if enabled
+  if (moduleConfig.parseContents) {
+    // @ts-ignore
+    const markdown = await import('@nuxt/content/transformers/markdown').then(m => m.default || m)
+    // Return parsed content
+    return await markdown.parse(`${githubConfig.owner}:${githubConfig.repo}:readme.md`, content, {
+      markdown: {
+        remarkPlugins: {
           // Use current Github repository for remark-github plugin
-            'remark-github': {
-              repository: `${githubConfig.owner}/${githubConfig.repo}`
-            }
+          'remark-github': {
+            repository: `${githubConfig.owner}/${githubConfig.repo}`
           }
         }
-      })
-    }
-
-    return content
-  },
-  {
-    maxAge: 60 // cache for one minute
+      }
+    })
   }
+
+  return content
+},
+{
+  maxAge: 60 // cache for one minute
+}
 )

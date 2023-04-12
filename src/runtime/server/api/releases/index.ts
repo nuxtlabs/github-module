@@ -1,26 +1,18 @@
-import { decodeParams, fetchReleases, overrideConfig, parseRelease } from '../../utils/queries'
-import type { ModuleOptions } from '../../../../module'
-import { GithubRawRelease, GithubReleasesQuery } from '../../../types'
+import { eventHandler } from 'h3'
+import type { H3Event } from 'h3'
+import { overrideConfig, decodeParams, fetchReleases, parseRelease } from '../../utils/queries'
+import type { GithubRawRelease, GithubReleasesQuery } from '../../../types'
 // @ts-ignore
-import * as imports from '#imports'
+import { useRuntimeConfig, cachedEventHandler } from '#imports'
 
-const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github
+const moduleConfig = useRuntimeConfig().github || {}
 
-let handler
-if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
-  // @ts-ignore
-  // eslint-disable-next-line import/namespace
-  handler = imports.defineEventHandler
-} else {
-  // @ts-ignore
-  // eslint-disable-next-line import/namespace
-  handler = imports.defineCachedEventHandler
-}
+const handler: typeof cachedEventHandler = process.env.NODE_ENV === 'development' || moduleConfig.disableCache ? eventHandler : cachedEventHandler
 
 export default handler(
-  async (event) => {
+  async (event: H3Event) => {
     // Get query
-    const query = decodeParams(event.context.params.query) as GithubReleasesQuery
+    const query = decodeParams(event.context.params?.query) as GithubReleasesQuery
 
     // Merge query in base config
     const githubConfig = overrideConfig(moduleConfig, query)
