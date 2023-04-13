@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const qOwner = ref('nuxt-community')
-const qRepo = ref('supabase-module')
+const qOwner = ref('nuxt-modules')
+const qRepo = ref('supabase')
 const file = ref('package.json')
 const date = ref('2022-06-30')
 </script>
