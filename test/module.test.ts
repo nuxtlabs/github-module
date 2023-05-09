@@ -9,7 +9,7 @@ describe('fixtures:basic', async () => {
   })
 
   test('List releases', async () => {
-    const releases = await $fetch('/api/_github/releases')
+    const releases = await $fetch('/api/_github/releases/index.json')
 
     expect(releases.length).greaterThan(0)
 

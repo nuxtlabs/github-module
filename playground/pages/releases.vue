@@ -1,8 +1,8 @@
 <script setup lang="ts">
 const { owner, repo } = useRuntimeConfig().github
 
-const qOwner = ref('nuxt-community')
-const qRepo = ref('supabase-module')
+const qOwner = ref('nuxt-modules')
+const qRepo = ref('supabase')
 </script>
 
 <template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-const qOwner = ref('nuxt-community')
-const qRepo = ref('supabase-module')
+const qOwner = ref('nuxt-modules')
+const qRepo = ref('supabase')
 const tag = ref('v0.1.18')
 </script>
 

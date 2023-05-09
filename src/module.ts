@@ -103,18 +103,12 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Setup repository API
     nitroConfig.handlers.push({
-      route: '/api/_github/repository',
-      handler: resolveModule('./server/api/repository', { paths: runtimeDir })
-    }, {
       route: '/api/_github/repository/:query',
       handler: resolveModule('./server/api/repository', { paths: runtimeDir })
     })
 
     // Setup readme file API
     nitroConfig.handlers.push({
-      route: '/api/_github/readme',
-      handler: resolveModule('./server/api/readme', { paths: runtimeDir })
-    }, {
       route: '/api/_github/readme/:query',
       handler: resolveModule('./server/api/readme', { paths: runtimeDir })
     })
@@ -144,13 +138,10 @@ export default defineNuxtModule<ModuleOptions>({
     if (options.releases) {
       // Releases list
       nitroConfig.handlers.push({
-        route: '/api/_github/releases',
-        handler: resolveModule('./server/api/releases/index', { paths: runtimeDir })
-      }, {
         route: '/api/_github/releases/:query',
         handler: resolveModule('./server/api/releases/index', { paths: runtimeDir })
       })
-      nitroConfig.prerender.routes.push('/api/_github/releases')
+      nitroConfig.prerender.routes.push('/api/_github/releases/index.json')
 
       // Releases components
       addComponent({
@@ -173,19 +164,13 @@ export default defineNuxtModule<ModuleOptions>({
     // Setup contributors API
     if (options.contributors) {
       nitroConfig.handlers.push({
-        route: '/api/_github/contributors',
-        handler: resolveModule('./server/api/contributors', { paths: runtimeDir })
-      }, {
         route: '/api/_github/contributors/:query',
         handler: resolveModule('./server/api/contributors', { paths: runtimeDir })
       })
-      nitroConfig.prerender.routes.push('/api/_github/contributors')
+      nitroConfig.prerender.routes.push('/api/_github/contributors/index.json')
 
       // TODO: Add prerender for file arguments (using :source argument)
       nitroConfig.handlers.push({
-        route: '/api/_github/contributors/file',
-        handler: resolveModule('./server/api/contributors/file', { paths: runtimeDir })
-      }, {
         route: '/api/_github/contributors/file/:query',
         handler: resolveModule('./server/api/contributors/file', { paths: runtimeDir })
       })
@@ -205,9 +190,6 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Setup commits API
     nitroConfig.handlers.push({
-      route: '/api/_github/commits',
-      handler: resolveModule('./server/api/commits', { paths: runtimeDir })
-    }, {
       route: '/api/_github/commits/:query',
       handler: resolveModule('./server/api/commits', { paths: runtimeDir })
     })

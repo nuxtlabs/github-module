@@ -10,7 +10,7 @@ const { data: releases } = await useAsyncData('releases', () => useGithub().fetc
       <ProseH2 :id="release.name">
         {{ release.name }}
       </ProseH2>
-      <Content :document="release" />
+      <ContentDoc :value="release" />
     </div>
   </div>
 </template>

@@ -2,15 +2,11 @@ import { joinURL, withQuery, QueryObject } from 'ufo'
 import { graphql } from '@octokit/graphql'
 import remarkGithub from 'remark-github'
 import { defu } from 'defu'
-import type {
-  ModuleOptions
-} from '../../../module'
-import { GithubRawRelease, GithubRepositoryOptions, GithubRawContributor, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository, GithubCommitsQuery } from '../../types'
-// @ts-ignore
-import { parseContent } from '#content/server'
+import type { ModuleOptions } from '../../../module'
+import type { GithubRawRelease, GithubRepositoryOptions, GithubRawContributor, GithubContributorsQuery, GithubReleasesQuery, GithubRepositoryReadme, GithubRepository, GithubCommitsQuery, GithubAuthor } from '../../types'
 
 export function decodeParams (params = '') {
-  const result = {}
+  const result: Record<string, string> = {}
   params = params.replace(/\.json$/, '')
   for (const param of params.split(':')) {
     const [key, ...value] = param.split('_')
@@ -19,7 +15,7 @@ export function decodeParams (params = '') {
   return result
 }
 
-function isBot (user) {
+function isBot (user: GithubAuthor) {
   return user.login.includes('[bot]') || user.login.includes('-bot') || user.login.includes('.bot')
 }
 
@@ -68,27 +64,27 @@ export function githubGraphqlQuery<T = any> (query: string, options: Partial<Mod
 }
 
 export const parseRelease = async (release: GithubRawRelease, githubConfig: GithubRepositoryOptions) => {
+  // @ts-ignore
+  const markdown = await import('@nuxt/content/transformers/markdown').then(m => m.default || m)
   let parsedRelease
   try {
     parsedRelease = {
       ...release,
       // Parse release notes when `@nuxt/content` is installed.
       ...(
-        typeof parseContent === 'function' && release?.body && release?.name
-          ? await parseContent(`github:${release.name}.md`, release.body, {
-            markdown: {
-              remarkPlugins: {
-                'remark-github': {
-                  instance: remarkGithub,
-                  repository: `${githubConfig.owner}/${githubConfig.repo}`
-                }
+        release?.body && release?.name
+          ? await markdown.parse(`github:${release.name}.md`, release.body, {
+            remarkPlugins: {
+              'remark-github': {
+                instance: remarkGithub,
+                repository: `${githubConfig.owner}/${githubConfig.repo}`
               }
             }
           })
           : {}
       )
     }
-  } catch (_err) {
+  } catch (_err: any) {
     // eslint-disable-next-line no-console
     console.warn(`Cannot parse release ${release?.name} [${_err.response?.status || 500}]`)
     return
@@ -105,9 +101,7 @@ export async function fetchRepository ({ api, owner, repo, token }: GithubReposi
   const url = `${api}/repos/${owner}/${repo}`
 
   const repository = await $fetch<GithubRepository>(url, {
-    headers: {
-      Authorization: token ? `token ${token}` : undefined
-    }
+    headers: token ? { Authorization: `token ${token}` } : {}
   }).catch((_) => {
     /*
     // eslint-disable-next-line no-console
@@ -128,9 +122,7 @@ export async function fetchRepositoryContributors ({ max }: Partial<GithubContri
   url = withQuery(url, { max } as QueryObject)
 
   const contributors = await $fetch<Array<GithubRawContributor>>(url, {
-    headers: {
-      Authorization: token ? `token ${token}` : undefined
-    }
+    headers: token ? { Authorization: `token ${token}` } : {}
   }).catch((_) => {
     /*
     // eslint-disable-next-line no-console
@@ -191,12 +183,12 @@ export async function fetchCommits ({ date, source }: Partial<Omit<GithubCommits
 
   if (!data?.repository?.object?.history?.nodes) { return [] }
 
-  const commits = data.repository.object.history.nodes.map(node => ({
+  const commits = data.repository.object.history.nodes.map((node: any) => ({
     hash: node.oid,
     message: node.messageHeadlineHTML,
     authors: node.authors.nodes
-      .map(author => author.user)
-      .filter(user => user?.name && !isBot(user))
+      .map((author: any) => author.user)
+      .filter((user: GithubAuthor) => user?.name && !isBot(user))
   }))
 
   return commits
@@ -244,15 +236,15 @@ export async function fetchFileContributors ({ source, max }: Partial<GithubCont
 
   if (!data?.repository?.object?.history?.nodes) { return [] }
 
-  let users = data.repository.object.history.nodes
-    .map(node => node.authors.nodes)
+  let users: GithubAuthor[] = data.repository.object.history.nodes
+    .map((node: any) => node.authors.nodes)
     .flat()
-    .map(node => node.user)
-    .filter(user => user && user.name)
-    .filter(user => !isBot(user))
+    .map((node: any) => node.user)
+    .filter((user: GithubAuthor) => user && user.name)
+    .filter((user: GithubAuthor) => !isBot(user))
 
   // Unique
-  users = users.reduce((unique, user) => (unique.find(u => u.login === user.login) ? unique : unique.concat(user)), [])
+  users = users.reduce((unique: GithubAuthor[], user: GithubAuthor) => (unique.find(u => u.login === user.login) ? unique : unique.concat(user)), [])
 
   return users.map(({ avatarUrl, name, login }) => ({ avatar_url: avatarUrl, name, login }))
 }
@@ -273,9 +265,7 @@ export async function fetchReleases (query: Partial<GithubReleasesQuery>, { api,
   }
 
   const rawReleases = await $fetch<Array<GithubRawRelease>>(url, {
-    headers: {
-      Authorization: token ? `token ${token}` : undefined
-    }
+    headers: token ? { Authorization: `token ${token}` } : {}
   }).catch((_) => {
     /*
     // eslint-disable-next-line no-console
@@ -300,9 +290,7 @@ export async function fetchReadme ({ api, owner, repo, token }: GithubRepository
   const url = `${api}/repos/${owner}/${repo}/readme`
 
   const readme = await $fetch<GithubRepositoryReadme>(url, {
-    headers: {
-      Authorization: token ? `token ${token}` : undefined
-    }
+    headers: token ? { Authorization: `token ${token}` } : {}
   }).catch((_) => {
     /*
     // eslint-disable-next-line no-console

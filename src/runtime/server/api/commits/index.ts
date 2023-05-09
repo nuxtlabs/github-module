@@ -1,26 +1,18 @@
-import type { ModuleOptions } from '../../../../module'
-import { decodeParams, fetchCommits, overrideConfig } from '../../utils/queries'
-import { GithubCommitsQuery } from '../../../types'
+import { eventHandler } from 'h3'
+import type { H3Event } from 'h3'
+import { overrideConfig, decodeParams, fetchCommits } from '../../utils/queries'
+import type { GithubCommitsQuery } from '../../../types'
 // @ts-ignore
-import * as imports from '#imports'
+import { useRuntimeConfig, cachedEventHandler } from '#imports'
 
-const moduleConfig: ModuleOptions = imports.useRuntimeConfig().github ?? {}
+const moduleConfig = useRuntimeConfig().github || {}
 
-let handler
-if (process.env.NODE_ENV === 'development' || moduleConfig.disableCache) {
-  // @ts-ignore
-  // eslint-disable-next-line import/namespace
-  handler = imports.defineEventHandler
-} else {
-  // @ts-ignore
-  // eslint-disable-next-line import/namespace
-  handler = imports.defineCachedEventHandler
-}
+const handler: typeof cachedEventHandler = process.env.NODE_ENV === 'development' || moduleConfig.disableCache ? eventHandler : cachedEventHandler
 
 export default handler(
-  async (event: any) => {
+  async (event: H3Event) => {
     // Get query
-    const query = decodeParams(event.context.params.query) as GithubCommitsQuery
+    const query = decodeParams(event.context.params?.query) as GithubCommitsQuery
     const normalizedQuery = {
       ...query,
       date: query.date ? new Date(query.date) : undefined
